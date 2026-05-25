@@ -1,0 +1,6 @@
+com.github.tchx84.Flatseal
+com.obsproject.Studio
+io.dbeaver.DBeaverCommunity
+io.github.flattool.Warehouse
+io.gitlab.metadatacleaner.metadatacleaner
+us.zoom.Zoom

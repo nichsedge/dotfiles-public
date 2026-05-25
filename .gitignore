@@ -1,2 +1,32 @@
-# local/private overrides
-home/.zshrc.local
+# Local/private overlays
+.secrets
+.zshrc.local
+.profile.local
+*.local
+
+# Credential and token formats
+*.pem
+*.key
+*.p12
+*.pfx
+*credential*.json
+*credentials*.json
+*token*.json
+*oauth*.json
+service-account*.json
+
+# Terraform/runtime state
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+
+# Python/build caches
+__pycache__/
+*.py[cod]
+.cache/
+
+# Editor/OS noise
+.DS_Store
+Thumbs.db

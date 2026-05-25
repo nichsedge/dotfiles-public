@@ -1,0 +1,10 @@
+terraform {
+  required_version = ">= 1.6.0"
+}
+
+variable "project_id" {
+  type = string
+}
+
+# Keep provider credentials outside the public repo. Prefer environment variables
+# or a private tfvars file ignored by git.

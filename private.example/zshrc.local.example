@@ -1,0 +1,3 @@
+# Copy to ~/.zshrc.local and chmod 0600. Do not commit real project shortcuts.
+export BLOG_PATH="$HOME/Projects/example-blog/content"
+alias sync-example='cd "$HOME/Projects/example" && git pull --ff-only'

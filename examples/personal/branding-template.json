@@ -1,0 +1,8 @@
+{
+  "name": "Your Name",
+  "headline": "Short professional headline",
+  "links": [
+    { "label": "GitHub", "url": "https://github.com/username" }
+  ],
+  "notes": "Keep private employment details, phone numbers, and full CV data out of the public repo."
+}

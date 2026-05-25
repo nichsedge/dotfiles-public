@@ -1,33 +1,17 @@
-# ~/.profile: executed by the command interpreter for login shells.
-# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
-# exists.
-# see /usr/share/doc/bash/examples/startup-files for examples.
-# the files are located in the bash-doc package.
+# Login shell setup shared by graphical sessions and POSIX shells.
 
-# the default umask is set in /etc/profile; for setting the umask
-# for ssh logins, install and configure the libpam-umask package.
-#umask 022
-
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
-    fi
+if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
+path_prepend_profile() {
+  [ -d "$1" ] && case ":$PATH:" in *":$1:"*) ;; *) PATH="$1:$PATH" ;; esac
+}
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-. "$HOME/.cargo/env"
+path_prepend_profile "$HOME/bin"
+path_prepend_profile "$HOME/.local/bin"
+[ -r "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
-
-# Added by Toolbox App
-export PATH="$PATH:/home/al/.local/share/JetBrains/Toolbox/scripts"
-
+# Machine-specific login-shell exports belong here, not in the public repo.
+[ -r "$HOME/.profile.local" ] && . "$HOME/.profile.local"
+export PATH
