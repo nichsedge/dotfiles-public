@@ -1,15 +1,22 @@
 # First Install Scripts
 
-Preferred Fedora GNOME bootstrap:
+Primary Fedora GNOME bootstrap:
 
 ```bash
 ./bootstrap.sh --profile fedora-gnome
 ```
 
-Dry-run first when changing the script:
+Secondary distro scripts:
 
 ```bash
-./bootstrap.sh --profile fedora-gnome --dry-run
+./scripts/first-install/ubuntu.sh --dry-run
+./scripts/first-install/arch.sh --dry-run
+```
+
+Shared user-level tools:
+
+```bash
+./scripts/tools/install-dev-tools.sh --dry-run
 ```
 
 Private credentials, cloud files, machine-specific project aliases, and personal docs are layered later from the private repo.

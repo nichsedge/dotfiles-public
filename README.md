@@ -52,9 +52,11 @@ Use the private repo for real credentials, GCP JSON files, SSH notes, CV/persona
 ## Layout
 
 - `home/`: portable public dotfiles.
-- `scripts/first-install/`: entrypoints for new-device setup.
+- `scripts/first-install/`: Fedora-first bootstrap plus Ubuntu/Arch secondary scripts.
 - `scripts/desktop/gnome/`: GNOME and Nautilus helpers.
+- `scripts/desktop/antigravity-post-install.sh`: optional Antigravity desktop launcher setup.
 - `scripts/tools/`: reusable utilities and repo checks.
+- `scripts/migration/`: backup/restore tooling for workstation migrations.
 - `packages/`: curated package references.
 - `examples/`: sanitized templates for Git, GCP, Terraform, and personal config.
 - `private.example/`: examples for private overlay files.
