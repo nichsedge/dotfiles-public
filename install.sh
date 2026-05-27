@@ -12,6 +12,7 @@ FILES=(
   ".zshenv"
   ".gitconfig"
   ".profile"
+  ".config/kitty/kitty.conf"
 )
 
 usage() {
@@ -95,6 +96,7 @@ for f in "${FILES[@]}"; do
     log "BACKUP ${dst} -> ${BACKUP_DIR}/${f}"
   fi
 
+  run mkdir -p "$(dirname "$dst")"
   run ln -s "$src" "$dst"
   log "LINK ${dst} -> ${src}"
 done

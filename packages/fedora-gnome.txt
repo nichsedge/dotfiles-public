@@ -24,6 +24,7 @@ python3-devel
 libffi-devel
 gh
 kitty
+jetbrainsmono-nerd-fonts
 gnome-tweaks
 gnome-extensions-app
 dconf-editor

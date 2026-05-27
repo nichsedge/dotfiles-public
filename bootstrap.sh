@@ -59,7 +59,7 @@ install_fedora_packages() {
     htop btop fastfetch tldr glow jq unzip util-linux-user \
     gcc gcc-c++ make cmake python3-devel libffi-devel \
     gh kitty gnome-tweaks gnome-extensions-app dconf-editor \
-    flatpak fuse fuse-libs ntfs-3g vlc firefox
+    jetbrainsmono-nerd-fonts flatpak fuse fuse-libs ntfs-3g vlc firefox
 
   run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 }

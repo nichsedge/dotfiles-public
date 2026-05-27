@@ -10,6 +10,7 @@ FILES=(
   ".zshenv"
   ".gitconfig"
   ".profile"
+  ".config/kitty/kitty.conf"
 )
 
 usage() {
@@ -39,6 +40,7 @@ for f in "${FILES[@]}"; do
   if [[ "$DRY_RUN" == true ]]; then
     echo "DRY-RUN cp ${src} ${dst}"
   else
+    mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
     chmod 0644 "$dst"
     echo "SYNC ${f}"

@@ -32,6 +32,7 @@ Skip package installs when the OS is already prepared:
 - `.zshenv`
 - `.gitconfig`
 - `.profile`
+- `.config/kitty/kitty.conf`
 
 Private files are created if missing and are never committed:
 
@@ -54,6 +55,7 @@ Use the private repo for real credentials, GCP JSON files, SSH notes, CV/persona
 - `home/`: portable public dotfiles.
 - `scripts/first-install/`: Fedora-first bootstrap plus Ubuntu/Arch secondary scripts.
 - `scripts/desktop/gnome/`: GNOME and Nautilus helpers.
+- `scripts/desktop/gnome/apply-dash-to-dock-grid-icon.sh`: reapplies the MacTahoe app-grid icon after Dash to Dock updates.
 - `scripts/desktop/antigravity-post-install.sh`: optional Antigravity desktop launcher setup.
 - `scripts/tools/`: reusable utilities and repo checks.
 - `scripts/migration/`: backup/restore tooling for workstation migrations.
