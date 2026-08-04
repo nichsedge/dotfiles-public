@@ -1,7 +1,6 @@
 # Catppuccin Macchiato Starship Prompt
 format = """
 [](#CAD3F5)\
-$os\
 $username\
 [](bg:#A5ADCB fg:#24273A)\
 $directory\
@@ -24,14 +23,7 @@ $line_break\
 $character"""
 
 [os]
-disabled = false
-style = "bg:#24273A fg:#CAD3F5"
-format = "[ $symbol]($style)"
-
-[os.symbols]
-NixOS = "❄"
-macos = "🍎"
-linux = "🐧"
+disabled = true
 
 [username]
 show_always = true
