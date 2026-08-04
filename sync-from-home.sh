@@ -11,6 +11,8 @@ FILES=(
   ".gitconfig"
   ".profile"
   ".config/kitty/kitty.conf"
+  ".config/starship.toml"
+  "Projects/sync_git_repos.sh"
 )
 
 usage() {

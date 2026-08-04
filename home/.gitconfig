@@ -1,6 +1,14 @@
 [pull]
-	rebase = false
+	rebase = true
+[user]
+	name = Amal
+	email = muhammad.ichsanul19@gmail.com
+[alias]
+	lg = log --oneline --graph --decorate --all
+	s = status -sb
+	aa = add -A
+	cm = commit -m
+	rb = rebase -i
+	undo = reset --soft HEAD~1
 [init]
 	defaultBranch = main
-[core]
-	editor = nano
