@@ -15,6 +15,7 @@ FILES=(
   ".config/kitty/kitty.conf"
   ".config/starship.toml"
   "Projects/sync_git_repos.sh"
+  ".local/share/applications/antigravity-ide.desktop"
 )
 
 usage() {
@@ -110,4 +111,12 @@ ensure_private_file "${HOME_DIR}/.profile.local" 0600
 log "Install complete. Private local files are intentionally untracked."
 if [[ "$mkdir_backup_if_needed" == true ]]; then
   log "Backup dir: ${BACKUP_DIR}"
+fi
+
+# Register protocol handler for Antigravity IDE
+if command -v update-desktop-database >/dev/null 2>&1; then
+  run update-desktop-database "${HOME_DIR}/.local/share/applications"
+fi
+if command -v xdg-mime >/dev/null 2>&1; then
+  run xdg-mime default antigravity-ide.desktop x-scheme-handler/antigravity-ide
 fi
