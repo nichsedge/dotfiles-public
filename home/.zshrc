@@ -254,7 +254,7 @@ export PATH=/home/al/.opencode/bin:$PATH
 export PATH="/home/al/bin/flutter/bin:$PATH"
 
 alias theme-sync='/home/al/Projects/misc/update_repos.sh'
-alias sync-repos='/home/al/Projects/sync_git_repos.sh'
+alias repos-sync='/home/al/Projects/sync_git_repos.sh'
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/al/bin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/al/bin/google-cloud-sdk/path.zsh.inc'; fi
