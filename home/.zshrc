@@ -124,7 +124,7 @@ export FZF_DEFAULT_OPTS='--height 60% --border --info=inline'
 # ----------------------
 # Aliases
 # ----------------------
-alias up='sudo dnf upgrade -y'
+alias up='sudo dnf upgrade -y && flatpak update -y && bash ~/Projects/misc/update_antigravity.sh check'
 alias clean='sudo dnf autoremove -y && sudo dnf clean all'
 alias c='clear'
 

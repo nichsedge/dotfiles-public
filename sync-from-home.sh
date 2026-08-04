@@ -14,6 +14,7 @@ FILES=(
   ".config/starship.toml"
   "Projects/sync_git_repos.sh"
   ".local/share/applications/antigravity-ide.desktop"
+  "Projects/misc/update_antigravity.sh"
 )
 
 usage() {
