@@ -29,7 +29,7 @@ style = "bg:#24273A fg:#CAD3F5"
 format = "[ $symbol]($style)"
 
 [os.symbols]
-nixos = "❄"
+NixOS = "❄"
 macos = "🍎"
 linux = "🐧"
 
