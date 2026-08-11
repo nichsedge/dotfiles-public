@@ -26,8 +26,8 @@ log()  { echo -e "${GREEN}→${NC} $1"; }
 warn() { echo -e "${YELLOW}⚠${NC} $1"; }
 err()  { echo -e "${RED}✗${NC} $1"; }
 
-# Get current version from package.json
-get_current_version() {
+# Get current version from package.json (Antigravity IDE)
+get_ide_version() {
     local pkg="$EXTRACT_DIR/resources/app/package.json"
     if [[ -f "$pkg" ]]; then
         python3 -c "import json; print(json.load(open('$pkg')).get('version','?'))" 2>/dev/null || echo "?"
@@ -36,14 +36,56 @@ get_current_version() {
     fi
 }
 
-# Check for updates by trying common version paths
+# Get version for Antigravity Desktop App (2.x)
+get_antigravity_version() {
+    local asar="$INSTALL_DIR/Antigravity-x64/resources/app.asar"
+    if [[ -f "$asar" ]]; then
+        python3 -c "
+import os, re
+path = os.path.expanduser('$asar')
+if os.path.exists(path):
+    with open(path, 'rb') as f:
+        content = f.read()
+        idx = content.find(b'\"name\": \"antigravity\"')
+        if idx != -1:
+            chunk = content[idx:idx+200]
+            m = re.search(rb'\"version\"\s*:\s*\"([0-9\.]+)\"', chunk)
+            if m:
+                print(m.group(1).decode())
+                exit(0)
+print('unknown')
+" 2>/dev/null || echo "?"
+    else
+        echo "not_installed"
+    fi
+}
+
+# Get version for Antigravity CLI (agy)
+get_agy_version() {
+    if command -v agy &>/dev/null; then
+        agy --version 2>/dev/null || echo "?"
+    elif [[ -x "$HOME/.local/bin/agy" ]]; then
+        "$HOME/.local/bin/agy" --version 2>/dev/null || echo "?"
+    else
+        echo "not_installed"
+    fi
+}
+
+# Alias for backward compatibility
+get_current_version() {
+    get_ide_version
+}
+
+# Check for updates across all 3 Antigravity executables
 check_update() {
-    local current=$(get_current_version)
-    log "Current version: $current"
-    
-    # Try to discover the latest version by checking the CDN
-    # The CDN path includes a version string like 2.0.1-4861014005645312
-    # Without directory listing, we need to know the version to check
+    log "Checking Antigravity components installed on system:"
+    echo ""
+    printf "  %-22s %-15s %s\n" "Component" "Version" "Path"
+    printf "  %-22s %-15s %s\n" "---------" "-------" "----"
+    printf "  %-22s %-15s %s\n" "antigravity (Hub)" "$(get_antigravity_version)" "$INSTALL_DIR/Antigravity-x64"
+    printf "  %-22s %-15s %s\n" "antigravity-ide (IDE)" "$(get_ide_version)" "$EXTRACT_DIR"
+    printf "  %-22s %-15s %s\n" "agy (CLI)" "$(get_agy_version)" "$HOME/.local/bin/agy"
+    echo ""
     warn "Cannot auto-detect latest version from CDN (no directory listing)"
     warn "Check https://antigravity.google.com for latest version info"
 }
@@ -124,19 +166,14 @@ case "${1:-}" in
         ;;
     check|status)
         check_update
-        echo ""
-        echo "Install location: $EXTRACT_DIR"
-        echo "Symlink: $SYMLINK → $(readlink -f "$SYMLINK" 2>/dev/null || echo 'broken')"
-        echo "Version: $(get_current_version)"
         ;;
     *)
-        echo "Antigravity IDE Updater"
+        echo "Antigravity Component Updater"
         echo ""
         echo "Usage:"
-        echo "  $0 check              Show current version"
-        echo "  $0 install <version>  Download and install a specific version"
-        echo "  $0 install latest     Try to install latest known version"
+        echo "  $0 check              Show installed versions for all components"
+        echo "  $0 install <version>  Download and install a specific IDE version"
         echo ""
-        echo "Current: $(get_current_version)"
+        check_update
         ;;
 esac
