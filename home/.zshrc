@@ -149,7 +149,7 @@ alias count='fd --type f . | wc -l'
 
 alias reload='source ~/.zshrc && echo ".zshrc reloaded!"'
 
-alias sync-atc='cd /home/al/Projects/atc && git pull -q && cd ../atracker/scripts && uv run sync_db.py ../atc/atracker.db'
+alias sync-atc='cd $HOME/Projects/atc && git pull -q && cd ../atracker/scripts && uv run sync_db.py ../atc/atracker.db'
 
 # ----------------------
 # Environment variables
@@ -190,10 +190,9 @@ export PROJECT_DIR=$HOME/Projects
 # export PROJECT_DATA_DIR=$PROJECT_DIR/.data
 export BLOG_PATH="$PROJECT_DIR/digital-graveyard/content"
 
-# GCP
-# export GCP_CREDENTIALS="$PROJECT_DIR/creds/gcp/SA_cred_general.json"
-export TF_VAR_bq_creds_file="$PROJECT_DIR/creds/gcp/bq.json"
-export GCP_CREDENTIALS="$PROJECT_DIR/creds/gcp/bq.json"
+# GCP (Use 'gcloud auth application-default login' instead of static JSON files)
+# export TF_VAR_bq_creds_file="$PROJECT_DIR/creds/gcp/bq.json"
+# export GCP_CREDENTIALS="$PROJECT_DIR/creds/gcp/bq.json"
 
 export AIRFLOW_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/airflow"
 export TMPDIR="${XDG_RUNTIME_DIR:-$HOME/tmp}"
@@ -203,7 +202,7 @@ eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 
 # bun completions
-[ -s "/home/al/.bun/_bun" ] && source "/home/al/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # ----------------------
 # Custom functions
@@ -231,11 +230,6 @@ fzf-text() {
   rg --line-number --no-heading . $1 | fzf --preview 'bat --color=always --line-range :500 {1}' | awk -F: '{print $1}'
 }
 
-# gct() {
-#   git config user.email "dqmops@telkomsel.co.id"
-#   git config user.name "dqmops"
-# }
-
 # # Path for custom local completions
 # fpath=(~/.zsh/completions $fpath)
 
@@ -243,21 +237,44 @@ fzf-text() {
 # autoload -U compinit
 # compinit
 
-
-
-# OpenClaw Completion
-# source <(openclaw completion --shell zsh)
-
 # opencode
-export PATH=/home/al/.opencode/bin:$PATH
+export PATH=$HOME/.opencode/bin:$PATH
 
-export PATH="/home/al/bin/flutter/bin:$PATH"
+export PATH="$HOME/bin/flutter/bin:$PATH"
 
-alias theme-sync='/home/al/Projects/misc/update_repos.sh'
-alias repos-sync='/home/al/Projects/sync_git_repos.sh'
+alias theme-sync='$HOME/Projects/misc/update_repos.sh'
+alias repos-sync='$HOME/Projects/sync_git_repos.sh'
+
+# ----------------------
+# Power-User Aliases & Global Pipes
+# ----------------------
+alias lg='lazygit'
+alias kdiff='kitty +kitten diff'
+
+# Global Pipes (e.g. ps aux G python, cat data.json J)
+alias -g G='| rg'
+alias -g J='| jq'
+alias -g F='| fzf'
+alias -g L='| less'
+
+# Interactive process kill via fzf
+fkill() {
+  local pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+  if [ "x$pid" != "x" ]; then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/al/bin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/al/bin/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/bin/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/bin/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/al/bin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/al/bin/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/bin/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/bin/google-cloud-sdk/completion.zsh.inc"; fi
+
+# ----------------------
+# Remote Mobile Auto-Attach (Zellij)
+# ----------------------
+if [[ -n "$SSH_CONNECTION" ]] && [[ -z "$ZELLIJ" ]]; then
+  zellij attach -c main
+fi
+
