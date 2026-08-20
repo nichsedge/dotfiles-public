@@ -285,7 +285,7 @@ web_client {
 //   - true
 //   - false (Default)
 // 
-// simplified_ui true
+simplified_ui false
  
 // Enable OSC8 hyperlink output
 // Options:
@@ -295,23 +295,9 @@ web_client {
 // osc8_hyperlinks true
  
 // Choose the theme that is specified in the themes section.
+// Default: default
+// 
 theme "catppuccin-macchiato"
-
-themes {
-    catppuccin-macchiato {
-        bg "#5b6078"
-        fg "#cad3f5"
-        red "#ed8796"
-        green "#a6da95"
-        blue "#8aadf4"
-        yellow "#eed49f"
-        magenta "#f5bde6"
-        orange "#f5a97f"
-        cyan "#8bd5ca"
-        black "#24273a"
-        white "#b8c0e0"
-    }
-}
  
 // Theme to use when the host terminal reports a dark color palette.
 // Requires `theme_light` to also be set; otherwise `theme` is used.
@@ -340,18 +326,18 @@ themes {
 // The name of the default layout to load on startup
 // Default: "default"
 // 
-// default_layout "compact"
- 
+default_layout "default"
+
 // The folder in which Zellij will look for layouts
 // (Requires restart)
 // 
 // layout_dir "/tmp"
- 
+
 // The folder in which Zellij will look for themes
 // (Requires restart)
 // 
 // theme_dir "/tmp"
- 
+
 // Toggle enabling the mouse mode.
 // On certain configurations, or terminals this could
 // potentially interfere with copying text.
@@ -360,13 +346,13 @@ themes {
 //   - false
 // 
 // mouse_mode false
- 
+
 // Toggle having pane frames around the panes
 // Options:
 //   - true (default, enabled)
 //   - false
 // 
-// pane_frames false
+pane_frames true
  
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)
@@ -407,12 +393,48 @@ themes {
 // copy_command "pbcopy"
  
 // Choose the destination for copied text
+// Allows using the primary selection buffer (on x11/wayland) instead of the system clipboard.
+// Does not apply when using copy_command.
+// Options:
+//   - system (default)
+//   - primary
+// 
 copy_clipboard "system"
-
-// Enable automatic copying of selection
+ 
+// Enable automatic copying (and clearing) of selection when releasing mouse
+// Default: true
+// 
 copy_on_select true
-
-// Whether sessions should be serialized so they can be resurrected across restarts
+ 
+// Path to the default editor to use to edit pane scrollbuffer
+// Default: $EDITOR or $VISUAL
+// scrollback_editor "/usr/bin/vim"
+ 
+// A fixed name to always give the Zellij session.
+// Consider also setting `attach_to_session true,`
+// otherwise this will error if such a session exists.
+// Default: <RANDOM>
+// 
+// session_name "My singleton session"
+ 
+// When `session_name` is provided, attaches to that session
+// if it is already running or creates it otherwise.
+// Default: false
+// 
+// attach_to_session true
+ 
+// Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
+// Options:
+//   - true (default)
+//   - false
+// 
+// auto_layout false
+ 
+// Whether sessions should be serialized to the cache folder (including their tabs/panes, cwds and running commands) so that they can later be resurrected
+// Options:
+//   - true (default)
+//   - false
+// 
 session_serialization true
  
 // Whether pane viewports are serialized along with the session, default is false
@@ -506,7 +528,7 @@ session_serialization true
 // Whether to show tips on startup
 // Default: true
 // 
-// show_startup_tips false
+show_startup_tips false
  
 // Whether to show release notes on first version run
 // Default: true

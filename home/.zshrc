@@ -149,8 +149,6 @@ alias count='fd --type f . | wc -l'
 
 alias reload='source ~/.zshrc && echo ".zshrc reloaded!"'
 
-alias sync-atc='cd $HOME/Projects/atc && git pull -q && cd ../atracker/scripts && uv run sync_db.py ../atc/atracker.db'
-
 # ----------------------
 # Environment variables
 # ----------------------
@@ -189,10 +187,6 @@ export PATH="$NPM_DIR/bin:$PATH"
 export PROJECT_DIR=$HOME/Projects
 # export PROJECT_DATA_DIR=$PROJECT_DIR/.data
 export BLOG_PATH="$PROJECT_DIR/digital-graveyard/content"
-
-# GCP (Use 'gcloud auth application-default login' instead of static JSON files)
-# export TF_VAR_bq_creds_file="$PROJECT_DIR/creds/gcp/bq.json"
-# export GCP_CREDENTIALS="$PROJECT_DIR/creds/gcp/bq.json"
 
 export AIRFLOW_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/airflow"
 export TMPDIR="${XDG_RUNTIME_DIR:-$HOME/tmp}"
@@ -278,3 +272,4 @@ if [[ -n "$SSH_CONNECTION" ]] && [[ -z "$ZELLIJ" ]]; then
   zellij attach -c main
 fi
 
+export COLORTERM=truecolor

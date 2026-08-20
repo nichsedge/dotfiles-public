@@ -12,6 +12,7 @@ FILES=(
   ".profile"
   ".config/kitty/kitty.conf"
   ".config/starship.toml"
+  ".config/zellij/config.kdl"
   "Projects/sync_git_repos.sh"
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
