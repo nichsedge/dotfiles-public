@@ -55,7 +55,7 @@ install_fedora_packages() {
 
   run sudo dnf upgrade -y
   run sudo dnf install -y \
-    git curl wget zsh tmux ripgrep fzf fd-find bat eza starship zoxide lazygit \
+    git curl wget zsh tmux ripgrep fzf fd-find bat eza starship zoxide lazygit git-delta direnv \
     htop btop fastfetch tldr glow jq unzip util-linux-user \
     gcc gcc-c++ make cmake python3-devel libffi-devel \
     gh kitty gnome-tweaks gnome-extensions-app dconf-editor \
@@ -66,7 +66,7 @@ install_fedora_packages() {
 
 install_minimal_packages() {
   if command -v dnf >/dev/null 2>&1; then
-    run sudo dnf install -y git curl zsh ripgrep fzf fd-find bat eza gh starship zoxide lazygit
+    run sudo dnf install -y git curl zsh ripgrep fzf fd-find bat eza gh starship zoxide lazygit git-delta direnv
   elif command -v apt-get >/dev/null 2>&1; then
     run sudo apt-get update
     run sudo apt-get install -y git curl zsh ripgrep fzf fd-find bat gh

@@ -8,6 +8,8 @@ fzf
 fd-find
 bat
 eza
+git-delta
+direnv
 htop
 btop
 fastfetch

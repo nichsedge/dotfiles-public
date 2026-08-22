@@ -26,11 +26,14 @@ log()  { echo -e "${GREEN}→${NC} $1"; }
 warn() { echo -e "${YELLOW}⚠${NC} $1"; }
 err()  { echo -e "${RED}✗${NC} $1"; }
 
-# Get current version from package.json (Antigravity IDE)
+# Get current version from product.json ideVersion (real product version;
+# package.json 'version' is just the Code-OSS base)
 get_ide_version() {
-    local pkg="$EXTRACT_DIR/resources/app/package.json"
-    if [[ -f "$pkg" ]]; then
-        python3 -c "import json; print(json.load(open('$pkg')).get('version','?'))" 2>/dev/null || echo "?"
+    local prod="$EXTRACT_DIR/resources/app/product.json"
+    if [[ -f "$prod" ]]; then
+        python3 -c "import json; print(json.load(open('$prod')).get('ideVersion','?'))" 2>/dev/null || echo "?"
+    elif [[ -f "$VERSION_FILE" ]]; then
+        cat "$VERSION_FILE"
     else
         echo "not_installed"
     fi
@@ -77,17 +80,33 @@ get_current_version() {
 }
 
 # Check for updates across all 3 Antigravity executables
+# Fetch latest versions from the official download page
+get_latest_versions() {
+    curl -fsSL --connect-timeout 15 "https://antigravity.google/download?os=linux" 2>/dev/null | \
+        grep -oE '(v[0-9]+\.[0-9]+\.[0-9]+)' | tr -d 'v' | head -4
+}
+
 check_update() {
     log "Checking Antigravity components installed on system:"
     echo ""
-    printf "  %-22s %-15s %s\n" "Component" "Version" "Path"
-    printf "  %-22s %-15s %s\n" "---------" "-------" "----"
-    printf "  %-22s %-15s %s\n" "antigravity (Hub)" "$(get_antigravity_version)" "$INSTALL_DIR/Antigravity-x64"
-    printf "  %-22s %-15s %s\n" "antigravity-ide (IDE)" "$(get_ide_version)" "$EXTRACT_DIR"
-    printf "  %-22s %-15s %s\n" "agy (CLI)" "$(get_agy_version)" "$HOME/.local/bin/agy"
+    printf "  %-22s %-12s %-12s %s\n" "Component" "Installed" "Latest" "Status"
+    printf "  %-22s %-12s %-12s %s\n" "---------" "---------" "------" "------"
+
+    local latest=()
+    mapfile -t latest < <(get_latest_versions)
+    local hub_latest="${latest[0]:-?}" cli_latest="${latest[1]:-?}" ide_latest="${latest[2]:-?}"
+
+    # ahead-of-latest counts as up to date
+    compare() { [[ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -1)" == "$1" ]] && echo -e "${GREEN}up to date${NC}" || echo -e "${YELLOW}update available${NC}"; }
+
+    local hub_cur; hub_cur="$(get_antigravity_version)"
+    local ide_cur; ide_cur="$(get_ide_version)"
+    local cli_cur; cli_cur="$(get_agy_version)"
+
+    printf "  %-22s %-12s %-12s %b\n" "antigravity (Hub)" "$hub_cur" "$hub_latest" "$(compare "$hub_cur" "$hub_latest")"
+    printf "  %-22s %-12s %-12s %b\n" "antigravity-ide (IDE)" "$ide_cur" "$ide_latest" "$(compare "$ide_cur" "$ide_latest")"
+    printf "  %-22s %-12s %-12s %b\n" "agy (CLI)" "$cli_cur" "$cli_latest" "$(compare "$cli_cur" "$cli_latest")"
     echo ""
-    warn "Cannot auto-detect latest version from CDN (no directory listing)"
-    warn "Check https://antigravity.google.com for latest version info"
 }
 
 # Download and install a specific version

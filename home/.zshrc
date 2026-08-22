@@ -124,7 +124,7 @@ export FZF_DEFAULT_OPTS='--height 60% --border --info=inline'
 # ----------------------
 # Aliases
 # ----------------------
-alias up='sudo dnf upgrade -y && flatpak update -y && bash ~/Projects/misc/update_antigravity.sh check'
+alias up='sudo dnf upgrade -y && flatpak update -y && bash ~/Projects/misc/update_antigravity.sh'
 alias clean='sudo dnf autoremove -y && sudo dnf clean all'
 alias c='clear'
 
@@ -237,7 +237,7 @@ export PATH=$HOME/.opencode/bin:$PATH
 export PATH="$HOME/bin/flutter/bin:$PATH"
 
 alias theme-sync='$HOME/Projects/misc/update_repos.sh'
-alias repos-sync='$HOME/Projects/sync_git_repos.sh'
+alias repos-sync='$HOME/Projects/_scheduled_jobs/sync_git_repos.sh'
 
 # ----------------------
 # Power-User Aliases & Global Pipes
@@ -273,3 +273,4 @@ if [[ -n "$SSH_CONNECTION" ]] && [[ -z "$ZELLIJ" ]]; then
 fi
 
 export COLORTERM=truecolor
+eval "$(direnv hook zsh)"
