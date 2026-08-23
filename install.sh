@@ -7,7 +7,18 @@ BACKUP_DIR="${HOME_DIR}/dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 DRY_RUN=false
 FORCE=false
 
+# Detect platform: home/common/ is always linked; home/<platform>/ adds OS-specific files.
+case "$(uname -s)" in
+  Darwin) PLATFORM="darwin" ;;
+  Linux)  PLATFORM="linux" ;;
+  *)
+    printf 'Unsupported platform: %s. Supported: Darwin, Linux.\n' "$(uname -s)"
+    exit 1
+    ;;
+esac
+
 FILES=(
+  # Shared across Linux and macOS (paths relative to home/common/)
   ".zshrc"
   ".zshenv"
   ".gitconfig"
@@ -15,11 +26,21 @@ FILES=(
   ".config/kitty/kitty.conf"
   ".config/starship.toml"
   ".config/zellij/config.kdl"
+)
+
+# Platform-specific files (paths relative to home/<platform>/)
+PLATFORM_FILES=(
   "Projects/sync_git_repos.sh"
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
   "Projects/misc/update_antigravity.sh"
 )
+
+if [[ "$PLATFORM" == "linux" ]]; then
+  for f in "${PLATFORM_FILES[@]}"; do
+    FILES+=("$f")
+  done
+fi
 
 usage() {
   cat <<'USAGE'
@@ -76,10 +97,17 @@ ensure_private_file() {
 mkdir_backup_if_needed=false
 
 for f in "${FILES[@]}"; do
-  src="${DOTFILES_DIR}/home/${f}"
+  # Resolve each file against common/ first, then the platform directory.
+  if [[ -f "${DOTFILES_DIR}/home/common/${f}" ]]; then
+    src="${DOTFILES_DIR}/home/common/${f}"
+  elif [[ -f "${DOTFILES_DIR}/home/${PLATFORM}/${f}" ]]; then
+    src="${DOTFILES_DIR}/home/${PLATFORM}/${f}"
+  else
+    src=""
+  fi
   dst="${HOME_DIR}/${f}"
 
-  if [[ ! -f "$src" ]]; then
+  if [[ -z "$src" ]]; then
     log "SKIP ${f}: source missing"
     continue
   fi
@@ -95,9 +123,10 @@ for f in "${FILES[@]}"; do
       exit 1
     fi
     if [[ "$mkdir_backup_if_needed" == false ]]; then
-      run mkdir -p "$BACKUP_DIR"
+      run mkdir -p "${BACKUP_DIR}/$(dirname "${f}")"
       mkdir_backup_if_needed=true
     fi
+    run mkdir -p "${BACKUP_DIR}/$(dirname "${f}")"
     run mv "$dst" "${BACKUP_DIR}/${f}"
     log "BACKUP ${dst} -> ${BACKUP_DIR}/${f}"
   fi
@@ -116,10 +145,12 @@ if [[ "$mkdir_backup_if_needed" == true ]]; then
   log "Backup dir: ${BACKUP_DIR}"
 fi
 
-# Register protocol handler for Antigravity IDE
-if command -v update-desktop-database >/dev/null 2>&1; then
-  run update-desktop-database "${HOME_DIR}/.local/share/applications"
-fi
-if command -v xdg-mime >/dev/null 2>&1; then
-  run xdg-mime default antigravity-ide.desktop x-scheme-handler/antigravity-ide
+# Register protocol handler for Antigravity IDE (Linux only)
+if [[ "$PLATFORM" == "linux" ]]; then
+  if command -v update-desktop-database >/dev/null 2>&1; then
+    run update-desktop-database "${HOME_DIR}/.local/share/applications"
+  fi
+  if command -v xdg-mime >/dev/null 2>&1; then
+    run xdg-mime default antigravity-ide.desktop x-scheme-handler/antigravity-ide
+  fi
 fi

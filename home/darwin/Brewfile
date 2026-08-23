@@ -1,0 +1,21 @@
+# macOS (Darwin) packages — installed via Homebrew
+# Usage: brew bundle --file=home/darwin/Brewfile
+
+# Core CLI tools (mirrors packages/fedora-gnome.txt where possible)
+brew "kitty"
+brew "starship"
+brew "zellij"
+brew "git-delta"
+brew "direnv"
+brew "fzf"
+brew "fd"
+brew "ripgrep"
+brew "eza"
+brew "zoxide"
+brew "git"
+
+# Shell
+cask "iterm2" # optional fallback terminal; remove if unused
+
+# Taps with shell integration files sourced from zsh on macOS:
+# fzf key-bindings/completion live under "$(brew --prefix)/opt/fzf/shell"

@@ -81,9 +81,18 @@ eval "$(starship init zsh)"
 # Zoxide — smart cd
 eval "$(zoxide init zsh)"
 
-# FZF — fuzzy finder
-source /usr/share/fzf/key-bindings.zsh 2>/dev/null
-source /usr/share/fzf/completion.zsh 2>/dev/null
+# FZF — fuzzy finder (key-bindings/completion live in distro- or brew-specific paths)
+case "$(uname)" in
+  Darwin)
+    FZF_SHELL_DIR="$(brew --prefix)/opt/fzf/shell"
+    source "$FZF_SHELL_DIR/key-bindings.zsh" 2>/dev/null
+    source "$FZF_SHELL_DIR/completion.zsh" 2>/dev/null
+    ;;
+  Linux)
+    source /usr/share/fzf/key-bindings.zsh 2>/dev/null
+    source /usr/share/fzf/completion.zsh 2>/dev/null
+    ;;
+esac
 # FZF style: use rg for better file search
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -124,8 +133,16 @@ export FZF_DEFAULT_OPTS='--height 60% --border --info=inline'
 # ----------------------
 # Aliases
 # ----------------------
-alias up='sudo dnf upgrade -y && flatpak update -y && bash ~/Projects/misc/update_antigravity.sh'
-alias clean='sudo dnf autoremove -y && sudo dnf clean all'
+case "$(uname)" in
+  Linux)
+    alias up='sudo dnf upgrade -y && flatpak update -y && bash ~/Projects/misc/update_antigravity.sh'
+    alias clean='sudo dnf autoremove -y && sudo dnf clean all'
+    ;;
+  Darwin)
+    alias up='brew update && brew upgrade && brew cleanup'
+    alias clean='brew cleanup --prune=all'
+    ;;
+esac
 alias c='clear'
 
 alias l='eza -lh --group-directories-first --icons'
@@ -142,7 +159,10 @@ alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
 
 alias now='date +%T'
-alias ports='ss -tulpn'
+case "$(uname)" in
+  Darwin) alias ports='lsof -i -P -n | grep LISTEN' ;;
+  *)      alias ports='ss -tulpn' ;;
+esac
 # alias gh='history|grep'
 alias count='fd --type f . | wc -l'
 # alias code='code-insiders'
@@ -155,7 +175,7 @@ alias reload='source ~/.zshrc && echo ".zshrc reloaded!"'
 
 # . "$HOME/.local/bin/env"
 
-export JAVA_HOME=/usr/lib/jvm/java-25-openjdk
+[[ "$(uname)" == "Linux" && -d /usr/lib/jvm/java-25-openjdk ]] && export JAVA_HOME=/usr/lib/jvm/java-25-openjdk
 export GO_HOME=$HOME/bin/go
 export HADOOP_HOME=$HOME/bin/hadoop-3.3.6
 export SPARK_HOME=$HOME/bin/spark-3.5.3-bin-without-hadoop
@@ -174,6 +194,11 @@ export NPM_DIR="$HOME/bin/node"
 # ----------------------
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+# Homebrew on Apple Silicon / Intel Macs
+if [[ "$(uname)" == "Darwin" ]]; then
+  [[ -d /opt/homebrew/bin ]] && export PATH="/opt/homebrew/bin:$PATH"
+  [[ -d /usr/local/bin ]] && export PATH="/usr/local/bin:$PATH"
+fi
 export PATH="$GO_HOME/bin:$PATH"
 export PATH="$HADOOP_HOME/bin:$PATH"
 export PATH="$HADOOP_HOME/sbin:$PATH"

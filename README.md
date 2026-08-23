@@ -26,13 +26,15 @@ Skip package installs when the OS is already prepared:
 
 ## Managed Files
 
-`install.sh` symlinks these files into `$HOME` and backs up existing files first:
+`install.sh` symlinks files from `home/common/` plus the platform directory (`home/linux/` or `home/darwin/`, detected via `uname -s`) into `$HOME`, backing up existing files first:
 
 - `.zshrc`
 - `.zshenv`
 - `.gitconfig`
 - `.profile`
 - `.config/kitty/kitty.conf`
+
+Platform-specific extras (Linux only): `Projects/sync_git_repos.sh`, `Projects/misc/update_antigravity.sh`, and `.local/share/applications/*.desktop`.
 
 Private files are created if missing and are never committed:
 
@@ -52,7 +54,9 @@ Use the private repo for real credentials, GCP JSON files, SSH notes, CV/persona
 
 ## Layout
 
-- `home/`: portable public dotfiles.
+- `home/common/`: portable dotfiles shared across Linux and macOS.
+- `home/linux/`: Linux-only dotfiles (desktop launchers, misc scripts).
+- `home/darwin/`: macOS-only dotfiles, including a Homebrew `Brewfile` (`brew bundle --file=home/darwin/Brewfile`).
 - `scripts/first-install/`: Fedora-first bootstrap plus Ubuntu/Arch secondary scripts.
 - `scripts/desktop/gnome/`: GNOME and Nautilus helpers.
 - `scripts/desktop/gnome/apply-dash-to-dock-grid-icon.sh`: reapplies the MacTahoe app-grid icon after Dash to Dock updates.
