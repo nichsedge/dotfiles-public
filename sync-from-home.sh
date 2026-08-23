@@ -36,9 +36,20 @@ for arg in "$@"; do
   esac
 done
 
+# Detect platform so synced files land in the right directory.
+case "$(uname -s)" in
+  Darwin) PLATFORM="darwin" ;;
+  Linux)  PLATFORM="linux" ;;
+  *) echo "Unsupported platform: $(uname -s)"; exit 1 ;;
+esac
+
 for f in "${FILES[@]}"; do
   src="${HOME_DIR}/${f}"
-  dst="${DOTFILES_DIR}/home/${f}"
+  if [[ -f "${DOTFILES_DIR}/home/common/${f}" ]]; then
+    dst="${DOTFILES_DIR}/home/common/${f}"
+  else
+    dst="${DOTFILES_DIR}/home/${PLATFORM}/${f}"
+  fi
   if [[ ! -f "$src" ]]; then
     echo "SKIP ${f}: missing in home"
     continue
