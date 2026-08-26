@@ -1,5 +1,5 @@
 [pull]
-	rebase = true
+	rebase = false
 [user]
 	name = Amal
 	email = muhammad.ichsanul19@gmail.com
@@ -18,5 +18,27 @@
 	diffFilter = delta --color-only
 [delta]
 	navigate = true
+	line-numbers = true
 [merge]
-	conflictstyle = diff3
+	conflictstyle = zdiff3
+[push]
+	autoSetupRemote = true
+	default = current
+[fetch]
+	prune = true
+	pruneTags = true
+[rebase]
+	autoStash = true
+	autoSquash = true
+[rerere]
+	enabled = true
+	autoupdate = true
+[diff]
+	algorithm = histogram
+	colorMoved = default
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[column]
+	ui = auto
