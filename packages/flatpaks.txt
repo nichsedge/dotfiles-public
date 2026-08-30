@@ -1,6 +1,10 @@
 com.github.tchx84.Flatseal
+com.mattjakeman.ExtensionManager
 com.obsproject.Studio
+com.rafaelmardojai.Blanket
 io.dbeaver.DBeaverCommunity
 io.github.flattool.Warehouse
-io.gitlab.metadatacleaner.metadatacleaner
+it.mijorus.gearlever
+org.upscayl.Upscayl
+org.videolan.VLC
 us.zoom.Zoom

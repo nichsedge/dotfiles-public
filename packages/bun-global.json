@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.84.3",
+    "@oh-my-pi/pi-coding-agent": "18.0.6",
+    "@oh-my-pi/pi-natives": "18.0.6",
+    "@oh-my-pi/pi-natives-linux-x64": "18.0.6",
+    "vercel": "^57.0.0"
+  }
+}
