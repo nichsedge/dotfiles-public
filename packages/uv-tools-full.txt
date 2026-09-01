@@ -1,0 +1,6 @@
+git-filter-repo v2.47.0
+- git-filter-repo
+rendercv v2.8
+- rendercv
+snsr v0.1.9
+- snsr

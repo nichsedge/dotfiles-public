@@ -1,3 +1,4 @@
 git-filter-repo
+hyprvalidate
 rendercv
 snsr

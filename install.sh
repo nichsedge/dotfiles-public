@@ -34,6 +34,22 @@ PLATFORM_FILES=(
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
   "Projects/misc/update_antigravity.sh"
+  ".config/hypr/hyprland.conf"
+  ".config/hypr/hyprlock.conf"
+  ".config/hypr/hypridle.conf"
+  ".config/hypr/hyprpaper.conf"
+  ".config/hypr/scripts/brightness.sh"
+  ".config/hypr/scripts/cheatsheet.sh"
+  ".config/hypr/scripts/clipboard.sh"
+  ".config/hypr/scripts/clipboard_fav.sh"
+  ".config/hypr/scripts/powermenu.sh"
+  ".config/hypr/scripts/screenshot.sh"
+  ".config/hypr/scripts/volume.sh"
+  ".config/hypr/scripts/wallpaper.sh"
+  ".config/waybar/config"
+  ".config/waybar/style.css"
+  ".config/wofi/config"
+  ".config/wofi/style.css"
 )
 
 if [[ "$PLATFORM" == "linux" ]]; then
