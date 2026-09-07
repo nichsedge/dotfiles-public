@@ -1,5 +1,7 @@
 git-filter-repo v2.47.0
 - git-filter-repo
+hyprvalidate v0.3.0
+- hyprvalidate
 rendercv v2.8
 - rendercv
 snsr v0.1.9

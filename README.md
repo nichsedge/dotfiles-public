@@ -33,6 +33,7 @@ Skip package installs when the OS is already prepared:
 - `.gitconfig`
 - `.profile`
 - `.config/kitty/kitty.conf`
+- `.config/ghostty/config`
 
 Platform-specific extras (Linux only): `Projects/sync_git_repos.sh`, `Projects/misc/update_antigravity.sh`, and `.local/share/applications/*.desktop`.
 

@@ -410,6 +410,17 @@ update_components() {
         fi
     fi
 
+    if [[ "$target" == "cli" || "$target" == "agy" || "$target" == "all" ]]; then
+        echo ""
+        if command -v agy &>/dev/null; then
+            info "Updating Antigravity CLI (agy)..."
+            agy update || true
+        elif [[ -x "$HOME/.local/bin/agy" ]]; then
+            info "Updating Antigravity CLI (agy)..."
+            "$HOME/.local/bin/agy" update || true
+        fi
+    fi
+
     echo ""
     check_update
 }
@@ -453,10 +464,10 @@ case "${1:-}" in
         echo -e "${BOLD}Antigravity Updater for Linux${NC}"
         echo ""
         echo "Usage:"
-        echo "  $0 check                  Check installed vs latest release versions"
-        echo "  $0 update [all|ide|hub]   Download & update outdated components"
-        echo "  $0 install <ide|hub> [v]  Install specific or latest version"
-        echo "  $0 list [all|ide|hub]     List available release versions"
+        echo "  $0 check                      Check installed vs latest release versions"
+        echo "  $0 update [all|ide|hub|cli]   Download & update outdated components"
+        echo "  $0 install <ide|hub> [v]      Install specific or latest version"
+        echo "  $0 list [all|ide|hub]         List available release versions"
         echo ""
         check_update
         ;;
