@@ -1,3 +1,4 @@
+browser-use
 git-filter-repo
 rendercv
 snsr
