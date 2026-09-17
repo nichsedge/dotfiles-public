@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DRY_RUN=false
-TERMINAL_APP="${TERMINAL_APP:-kitty}"
+TERMINAL_APP="${TERMINAL_APP:-ghostty}"
 
 usage() {
   cat <<'USAGE'

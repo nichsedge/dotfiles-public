@@ -48,7 +48,7 @@ run sudo apt-get upgrade -y
 run sudo apt-get install -y \
   adb bat build-essential ca-certificates cmake curl default-jdk default-jre \
   ffmpeg firefox flatpak fzf gh git gnome-shell-extension-manager \
-  gnome-software-plugin-flatpak gnome-tweaks htop jq kitty libffi-dev \
+  gnome-software-plugin-flatpak gnome-tweaks htop jq libffi-dev \
   libfuse2 python3-dev ripgrep scrcpy software-properties-common unzip vlc wget zsh
 
 if [[ "$INSTALL_FLATPAK" == true ]]; then

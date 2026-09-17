@@ -2,7 +2,6 @@
 # Usage: brew bundle --file=home/darwin/Brewfile
 
 # Core CLI tools (mirrors packages/fedora-gnome.txt where possible)
-brew "kitty"
 brew "starship"
 brew "zellij"
 brew "git-delta"
@@ -15,6 +14,7 @@ brew "zoxide"
 brew "git"
 
 # Shell
+cask "ghostty"
 cask "iterm2" # optional fallback terminal; remove if unused
 
 # Taps with shell integration files sourced from zsh on macOS:

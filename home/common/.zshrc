@@ -268,7 +268,6 @@ alias repos-sync='$HOME/Projects/_scheduled_jobs/sync_git_repos.sh'
 # Power-User Aliases & Global Pipes
 # ----------------------
 alias lg='lazygit'
-alias kdiff='kitty +kitten diff'
 
 # Global Pipes (e.g. ps aux G python, cat data.json J)
 alias -g G='| rg'

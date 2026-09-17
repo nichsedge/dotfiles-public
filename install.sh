@@ -23,7 +23,6 @@ FILES=(
   ".zshenv"
   ".gitconfig"
   ".profile"
-  ".config/kitty/kitty.conf"
   ".config/ghostty/config"
   ".config/ghostty/themes/dankcolors"
   ".config/starship.toml"

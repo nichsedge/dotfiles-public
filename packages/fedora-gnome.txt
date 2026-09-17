@@ -25,7 +25,7 @@ cmake
 python3-devel
 libffi-devel
 gh
-kitty
+ghostty
 jetbrainsmono-nerd-fonts
 gnome-tweaks
 gnome-extensions-app

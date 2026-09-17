@@ -53,11 +53,12 @@ install_fedora_packages() {
     return
   fi
   run sudo dnf upgrade -y
+  run sudo dnf copr enable -y scottames/ghostty
   if [[ -f "$DOTFILES_DIR/packages/fedora-gnome.txt" ]]; then
     log "Installing Fedora packages from packages/fedora-gnome.txt"
     run sudo dnf install -y $(grep -v '^#' "$DOTFILES_DIR/packages/fedora-gnome.txt" | grep -v '^$' | tr '\n' ' ')
   else
-    run sudo dnf install -y git curl wget zsh tmux ripgrep fzf fd-find bat eza starship zoxide lazygit git-delta direnv htop btop fastfetch tldr glow jq unzip util-linux-user gcc gcc-c++ make cmake python3-devel libffi-devel gh kitty gnome-tweaks gnome-extensions-app dconf-editor jetbrainsmono-nerd-fonts flatpak fuse fuse-libs ntfs-3g vlc firefox
+    run sudo dnf install -y git curl wget zsh tmux ripgrep fzf fd-find bat eza starship zoxide lazygit git-delta direnv htop btop fastfetch tldr glow jq unzip util-linux-user gcc gcc-c++ make cmake python3-devel libffi-devel gh ghostty gnome-tweaks gnome-extensions-app dconf-editor jetbrainsmono-nerd-fonts flatpak fuse fuse-libs ntfs-3g vlc firefox
   fi
   run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
   if [[ -f "$DOTFILES_DIR/packages/flatpaks.txt" ]]; then
