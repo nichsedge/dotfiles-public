@@ -96,11 +96,11 @@ install_mobile_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v apt-get >/dev/null 2>&1; then
     run $sudo_cmd apt-get update
-    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf ca-certificates
+    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates
   elif command -v dnf >/dev/null 2>&1; then
-    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf
+    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf unzip
   elif command -v pacman >/dev/null 2>&1; then
-    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf
+    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf unzip
   else
     log "No supported package manager found; skipping mobile packages."
   fi
