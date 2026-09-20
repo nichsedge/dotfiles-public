@@ -11,11 +11,32 @@ cd ~/Projects/dotfiles-public
 ./bootstrap.sh --profile fedora-gnome
 ```
 
+## First Install: Mobile / Headless (Termux PRoot Debian)
+
+For Android devices (e.g. Xiaomi 14T Pro) running Termux + PRoot Debian to support full glibc runtimes (`uv`, `bun`, `agy` CLI):
+
+```bash
+# 1. In native Termux: install PRoot Debian
+pkg update && pkg install proot-distro
+proot-distro install debian
+proot-distro login debian --shared-tmp
+
+# 2. In PRoot Debian: bootstrap dotfiles
+apt-get update && apt-get install -y git curl sudo
+mkdir -p ~/Projects
+git clone https://github.com/nichsedge/dotfiles-public.git ~/Projects/dotfiles-public
+cd ~/Projects/dotfiles-public
+./bootstrap.sh --profile mobile
+```
+
 Preview without changing the machine:
 
 ```bash
 ./bootstrap.sh --profile fedora-gnome --dry-run
 ./install.sh --dry-run
+# Or on mobile:
+./bootstrap.sh --profile mobile --dry-run
+./install.sh --dry-run --headless
 ```
 
 Skip package installs when the OS is already prepared:

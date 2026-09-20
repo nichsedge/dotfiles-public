@@ -7,6 +7,8 @@ BACKUP_DIR="${HOME_DIR}/dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 DRY_RUN=false
 FORCE=false
 
+HEADLESS=false
+
 # Detect platform: home/common/ is always linked; home/<platform>/ adds OS-specific files.
 case "$(uname -s)" in
   Darwin) PLATFORM="darwin" ;;
@@ -17,17 +19,57 @@ case "$(uname -s)" in
     ;;
 esac
 
+usage() {
+  cat <<'USAGE'
+Usage: ./install.sh [--dry-run] [--force] [--headless]
+
+Symlink public dotfiles from ./home into $HOME, backing up existing files first.
+
+Options:
+  --dry-run   Print actions without changing files
+  --force     Replace an existing file/link even when it is not managed here
+  --headless  Install CLI-only dotfiles; skip desktop GUI files (Hyprland, Waybar, Ghostty, .desktop)
+USAGE
+}
+
+log() { printf '%s\n' "$*"; }
+run() {
+  if [[ "$DRY_RUN" == true ]]; then
+    printf 'DRY-RUN %q' "$1"
+    shift
+    printf ' %q' "$@"
+    printf '\n'
+  else
+    "$@"
+  fi
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --force) FORCE=true ;;
+    --headless) HEADLESS=true ;;
+    -h|--help) usage; exit 0 ;;
+    *) log "Unknown option: $arg"; usage; exit 1 ;;
+  esac
+done
+
 FILES=(
   # Shared across Linux and macOS (paths relative to home/common/)
   ".zshrc"
   ".zshenv"
   ".gitconfig"
   ".profile"
-  ".config/ghostty/config"
-  ".config/ghostty/themes/dankcolors"
   ".config/starship.toml"
   ".config/zellij/config.kdl"
 )
+
+if [[ "$HEADLESS" != true ]]; then
+  FILES+=(
+    ".config/ghostty/config"
+    ".config/ghostty/themes/dankcolors"
+  )
+fi
 
 # Platform-specific files (paths relative to home/<platform>/)
 PLATFORM_FILES=(
@@ -53,44 +95,11 @@ PLATFORM_FILES=(
   ".config/wofi/style.css"
 )
 
-if [[ "$PLATFORM" == "linux" ]]; then
+if [[ "$PLATFORM" == "linux" && "$HEADLESS" != true ]]; then
   for f in "${PLATFORM_FILES[@]}"; do
     FILES+=("$f")
   done
 fi
-
-usage() {
-  cat <<'USAGE'
-Usage: ./install.sh [--dry-run] [--force]
-
-Symlink public dotfiles from ./home into $HOME, backing up existing files first.
-
-Options:
-  --dry-run  Print actions without changing files
-  --force    Replace an existing file/link even when it is not managed here
-USAGE
-}
-
-log() { printf '%s\n' "$*"; }
-run() {
-  if [[ "$DRY_RUN" == true ]]; then
-    printf 'DRY-RUN %q' "$1"
-    shift
-    printf ' %q' "$@"
-    printf '\n'
-  else
-    "$@"
-  fi
-}
-
-for arg in "$@"; do
-  case "$arg" in
-    --dry-run) DRY_RUN=true ;;
-    --force) FORCE=true ;;
-    -h|--help) usage; exit 0 ;;
-    *) log "Unknown option: $arg"; usage; exit 1 ;;
-  esac
-done
 
 ensure_private_file() {
   local path="$1"
@@ -162,8 +171,8 @@ if [[ "$mkdir_backup_if_needed" == true ]]; then
   log "Backup dir: ${BACKUP_DIR}"
 fi
 
-# Register protocol handler for Antigravity IDE (Linux only)
-if [[ "$PLATFORM" == "linux" ]]; then
+# Register protocol handler for Antigravity IDE (Linux desktop only)
+if [[ "$PLATFORM" == "linux" && "$HEADLESS" != true ]]; then
   if command -v update-desktop-database >/dev/null 2>&1; then
     run update-desktop-database "${HOME_DIR}/.local/share/applications"
   fi

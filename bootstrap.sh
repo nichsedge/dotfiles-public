@@ -8,12 +8,12 @@ DRY_RUN=false
 
 usage() {
   cat <<'USAGE'
-Usage: ./bootstrap.sh [--profile fedora-gnome|minimal] [--no-packages] [--dry-run]
+Usage: ./bootstrap.sh [--profile fedora-gnome|minimal|mobile] [--no-packages] [--dry-run]
 
 Bootstraps a new machine using this public dotfiles repo.
 
 Options:
-  --profile NAME  Install profile. Default: fedora-gnome
+  --profile NAME  Install profile: fedora-gnome, minimal, or mobile (PRoot/Debian/headless). Default: fedora-gnome
   --no-packages   Skip package and external tool installation
   --dry-run       Print actions without changing files
 USAGE
@@ -27,6 +27,14 @@ run() {
     printf '\n'
   else
     "$@"
+  fi
+}
+
+get_sudo() {
+  if [[ "$(id -u)" -ne 0 ]] && command -v sudo >/dev/null 2>&1; then
+    echo "sudo"
+  else
+    echo ""
   fi
 }
 
@@ -71,15 +79,50 @@ install_fedora_packages() {
 }
 
 install_minimal_packages() {
+  local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v dnf >/dev/null 2>&1; then
-    run sudo dnf install -y git curl zsh ripgrep fzf fd-find bat eza gh starship zoxide lazygit git-delta direnv
+    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf fd-find bat eza gh starship zoxide lazygit git-delta direnv
   elif command -v apt-get >/dev/null 2>&1; then
-    run sudo apt-get update
-    run sudo apt-get install -y git curl zsh ripgrep fzf fd-find bat gh
+    run $sudo_cmd apt-get update
+    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf fd-find bat gh
   elif command -v pacman >/dev/null 2>&1; then
-    run sudo pacman -Syu --noconfirm git curl zsh ripgrep fzf fd bat github-cli
+    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf fd bat github-cli
   else
     log "No supported package manager found; skipping package install."
+  fi
+}
+
+install_mobile_packages() {
+  local sudo_cmd; sudo_cmd="$(get_sudo)"
+  if command -v apt-get >/dev/null 2>&1; then
+    run $sudo_cmd apt-get update
+    run $sudo_cmd apt-get install -y git curl wget zsh ripgrep fzf fd-find bat direnv ca-certificates unzip build-essential
+    # Debian / PRoot compatibility symlinks
+    run mkdir -p "$HOME/.local/bin"
+    if command -v fdfind >/dev/null 2>&1 || [[ -x /usr/bin/fdfind ]]; then
+      run ln -sf "$(command -v fdfind || echo /usr/bin/fdfind)" "$HOME/.local/bin/fd"
+    fi
+    if command -v batcat >/dev/null 2>&1 || [[ -x /usr/bin/batcat ]]; then
+      run ln -sf "$(command -v batcat || echo /usr/bin/batcat)" "$HOME/.local/bin/bat"
+    fi
+  elif command -v dnf >/dev/null 2>&1; then
+    run $sudo_cmd dnf install -y git curl wget zsh ripgrep fzf fd-find bat eza starship zoxide direnv
+  elif command -v pacman >/dev/null 2>&1; then
+    run $sudo_cmd pacman -Syu --noconfirm git curl wget zsh ripgrep fzf fd bat eza starship zoxide direnv
+  else
+    log "No supported package manager found; skipping mobile packages."
+  fi
+
+  # Ensure Starship prompt is present
+  if ! command -v starship >/dev/null 2>&1; then
+    log "Installing Starship prompt..."
+    run sh -c 'curl -sS https://starship.rs/install.sh | sh -s -- -y' || true
+  fi
+
+  # Ensure Zoxide is present
+  if ! command -v zoxide >/dev/null 2>&1; then
+    log "Installing zoxide..."
+    run sh -c 'curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh' || true
   fi
 }
 
@@ -113,6 +156,10 @@ install_external_tools() {
   if ! command -v bun >/dev/null 2>&1; then
     run sh -c 'curl -fsSL https://bun.sh/install | bash'
   fi
+  if ! command -v agy >/dev/null 2>&1; then
+    log "Installing Antigravity CLI (agy)..."
+    run sh -c 'curl -fsSL https://antigravity.google/cli/install.sh | bash' || true
+  fi
   export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.bun/bin:$PATH"
   # reinstall user tools from manifests (lean, idempotent)
   if [[ -f "$DOTFILES_DIR/packages/uv-tools.txt" ]] && command -v uv >/dev/null 2>&1; then
@@ -124,7 +171,7 @@ install_external_tools() {
   fi
   if [[ -f "$DOTFILES_DIR/packages/bun-global.json" ]] && command -v bun >/dev/null 2>&1; then
     log "Reinstalling bun globals from packages/bun-global.json"
-    run sh -c 'cd "$DOTFILES_DIR" && bun install --cwd "$HOME/.bun/install/global" 2>/dev/null || (cat packages/bun-global.json | python3 -c "import json; j=json.load(open(\"packages/bun-global.json\")); print(chr(10).join([f\"{k}@{v}\" for k,v in j.get(\"dependencies\",{}).items()]))" | xargs -r bun add -g)'
+    run sh -c 'cd "$DOTFILES_DIR" && bun install --cwd "$HOME/.bun/install/global" 2>/dev/null || (cat packages/bun-global.json | python3 -c "import json; j=json.load(open(\"packages/bun-global.json\")); print(chr(10).join([f\"{k}@{v}\" for k,v in j.get(\"dependencies\",{}).items()]))" | xargs -r bun add -g)' || true
   fi
   if [[ -f "$DOTFILES_DIR/packages/npm-global.txt" ]] && command -v npm >/dev/null 2>&1; then
     log "Reinstalling npm globals from packages/npm-global.txt"
@@ -142,7 +189,7 @@ ensure_zsh_default_hint() {
 }
 
 case "$PROFILE" in
-  fedora-gnome|minimal) ;;
+  fedora-gnome|minimal|mobile) ;;
   *) log "Unsupported profile: $PROFILE"; usage; exit 1 ;;
 esac
 
@@ -152,6 +199,7 @@ if [[ "$INSTALL_PACKAGES" == true ]]; then
   case "$PROFILE" in
     fedora-gnome) install_fedora_packages ;;
     minimal) install_minimal_packages ;;
+    mobile) install_mobile_packages ;;
   esac
 else
   log "Skipping package installation (--no-packages)"
@@ -161,7 +209,11 @@ install_oh_my_zsh_if_missing
 install_zsh_plugin zsh-autosuggestions https://github.com/zsh-users/zsh-autosuggestions.git
 install_zsh_plugin zsh-syntax-highlighting https://github.com/zsh-users/zsh-syntax-highlighting.git
 install_external_tools
-"${DOTFILES_DIR}/install.sh" ${DRY_RUN:+--dry-run}
+
+install_flags=()
+[[ "$DRY_RUN" == true ]] && install_flags+=(--dry-run)
+[[ "$PROFILE" == "mobile" || "$PROFILE" == "minimal" ]] && install_flags+=(--headless)
+"${DOTFILES_DIR}/install.sh" "${install_flags[@]}"
 ensure_zsh_default_hint
 
 log "Bootstrap complete. Private setup can be layered from ~/Projects/creds later."

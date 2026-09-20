@@ -12,20 +12,26 @@ source "$ZSH/oh-my-zsh.sh"
 [[ -f "$HOME/.secrets" ]] && source "$HOME/.secrets"
 
 # Shell Integrations
-eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
 # FZF Key-bindings & Search Configuration
-[[ -f /usr/share/fzf/shell/key-bindings.zsh ]] && source /usr/share/fzf/shell/key-bindings.zsh
+if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
+  source /usr/share/fzf/shell/key-bindings.zsh
+elif [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+elif [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+  source /usr/share/fzf/key-bindings.zsh
+fi
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="--height 60% --border --info=inline"
 
 # CLI Completions (uv, bun, direnv)
-eval "$(uv generate-shell-completion zsh)"
-eval "$(uvx --generate-shell-completion zsh)"
+command -v uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion zsh)"
+command -v uvx >/dev/null 2>&1 && eval "$(uvx --generate-shell-completion zsh)"
 [[ -s "$HOME/.bun/_bun" ]] && source "$HOME/.bun/_bun"
-eval "$(direnv hook zsh)"
+command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 # Google Cloud SDK Integrations
 [[ -f "$HOME/bin/google-cloud-sdk/path.zsh.inc" ]] && source "$HOME/bin/google-cloud-sdk/path.zsh.inc"
@@ -71,21 +77,37 @@ export PATH
 # Aliases
 # ==============================================================================
 # System Maintenance
-alias up="sudo dnf upgrade -y && flatpak update -y && update-antigravity update"
-alias clean="sudo dnf autoremove -y && sudo dnf clean all"
+if command -v dnf >/dev/null 2>&1; then
+  alias up="sudo dnf upgrade -y && flatpak update -y && update-antigravity update"
+  alias clean="sudo dnf autoremove -y && sudo dnf clean all"
+elif command -v apt-get >/dev/null 2>&1; then
+  alias up="apt-get update && apt-get upgrade -y"
+  alias clean="apt-get autoremove -y && apt-get clean"
+fi
 alias ports="ss -tulpn"
 alias now="date +%T"
-alias reload="source ~/.zshrc && echo "✓ ~/.zshrc reloaded!""
+alias reload="source ~/.zshrc && echo \"✓ ~/.zshrc reloaded!\""
 alias c="clear"
 
-# Modern Coreutils (eza)
-alias l="eza -lh --group-directories-first --icons"
-alias la="eza -A --icons"
-alias ll="eza -alF --group-directories-first --icons"
-alias l.="eza -d .* --icons"
-alias lt="eza -lhS --group-directories-first --icons"
-alias tree="eza -T --group-directories-first --icons"
+# Modern Coreutils (eza / bat / fd fallback)
+if command -v eza >/dev/null 2>&1; then
+  alias l="eza -lh --group-directories-first --icons"
+  alias la="eza -A --icons"
+  alias ll="eza -alF --group-directories-first --icons"
+  alias l.="eza -d .* --icons"
+  alias lt="eza -lhS --group-directories-first --icons"
+  alias tree="eza -T --group-directories-first --icons"
+else
+  alias l="ls -lh"
+  alias la="ls -A"
+  alias ll="ls -alF"
+fi
 alias count="fd --type f . | wc -l"
+
+# Memory Optimization for Mobile / PRoot / Resource-Constrained Environments
+if [[ -n "${PROOT_TMP_DIR:-}" || -d "/data/data/com.termux" || ( "$(uname -m)" == "aarch64" && ! -d "/sys/class/dmi" ) ]]; then
+  export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=512}"
+fi
 
 # Git
 alias gs="git status"
