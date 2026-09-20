@@ -96,9 +96,14 @@ install_mobile_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v apt-get >/dev/null 2>&1; then
     run $sudo_cmd apt-get update
-    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates
+    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term
+    if command -v locale-gen >/dev/null 2>&1; then
+      run sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen || true
+      run locale-gen || true
+      run update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 || true
+    fi
   elif command -v dnf >/dev/null 2>&1; then
-    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf unzip
+    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf unzip glibc-langpack-en ncurses-term
   elif command -v pacman >/dev/null 2>&1; then
     run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf unzip
   else

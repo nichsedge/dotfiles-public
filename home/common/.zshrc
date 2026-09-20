@@ -2,6 +2,13 @@
 # Workstation Shell Configuration (Amal @ al@fedora)
 # ==============================================================================
 
+# Locale & Terminal Settings
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+if [ -z "$TERM" ] || [ "$TERM" = "dumb" ] || ! infocmp "$TERM" >/dev/null 2>&1; then
+  export TERM=xterm-256color
+fi
+
 # Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="" # Disabled — using Starship prompt instead
