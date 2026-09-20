@@ -177,6 +177,25 @@ install_external_tools() {
 }
 
 ensure_zsh_default_hint() {
+  if [[ "$PROFILE" == "mobile" ]]; then
+    if [[ -f "$HOME/.bashrc" ]] && ! grep -q "exec zsh" "$HOME/.bashrc"; then
+      log "Adding automatic Zsh switch to $HOME/.bashrc for PRoot compatibility"
+      if [[ "$DRY_RUN" == true ]]; then
+        log "DRY-RUN append auto-switch to zsh in $HOME/.bashrc"
+      else
+        cat << 'EOF' >> "$HOME/.bashrc"
+
+# Auto switch to zsh in PRoot
+if [ -t 1 ] && [ -n "${PS1:-}" ] && [ -x "$(command -v zsh 2>/dev/null)" ]; then
+  export SHELL="$(command -v zsh)"
+  exec zsh
+fi
+EOF
+      fi
+    fi
+    return
+  fi
+
   if [[ "${SHELL:-}" != *zsh ]]; then
     log "Default shell is not zsh. Run after bootstrap if desired: chsh -s \"$(command -v zsh || echo /usr/bin/zsh)\""
   fi
