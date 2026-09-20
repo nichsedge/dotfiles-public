@@ -96,33 +96,19 @@ install_mobile_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v apt-get >/dev/null 2>&1; then
     run $sudo_cmd apt-get update
-    run $sudo_cmd apt-get install -y git curl wget zsh ripgrep fzf fd-find bat direnv ca-certificates unzip build-essential
-    # Debian / PRoot compatibility symlinks
-    run mkdir -p "$HOME/.local/bin"
-    if command -v fdfind >/dev/null 2>&1 || [[ -x /usr/bin/fdfind ]]; then
-      run ln -sf "$(command -v fdfind || echo /usr/bin/fdfind)" "$HOME/.local/bin/fd"
-    fi
-    if command -v batcat >/dev/null 2>&1 || [[ -x /usr/bin/batcat ]]; then
-      run ln -sf "$(command -v batcat || echo /usr/bin/batcat)" "$HOME/.local/bin/bat"
-    fi
+    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf ca-certificates
   elif command -v dnf >/dev/null 2>&1; then
-    run $sudo_cmd dnf install -y git curl wget zsh ripgrep fzf fd-find bat eza starship zoxide direnv
+    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf
   elif command -v pacman >/dev/null 2>&1; then
-    run $sudo_cmd pacman -Syu --noconfirm git curl wget zsh ripgrep fzf fd bat eza starship zoxide direnv
+    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf
   else
     log "No supported package manager found; skipping mobile packages."
   fi
 
-  # Ensure Starship prompt is present
+  # Ensure Starship prompt is present for fast, clean prompt
   if ! command -v starship >/dev/null 2>&1; then
     log "Installing Starship prompt..."
     run sh -c 'curl -sS https://starship.rs/install.sh | sh -s -- -y' || true
-  fi
-
-  # Ensure Zoxide is present
-  if ! command -v zoxide >/dev/null 2>&1; then
-    log "Installing zoxide..."
-    run sh -c 'curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh' || true
   fi
 }
 
@@ -150,9 +136,7 @@ install_external_tools() {
   [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env" || true
   [[ -f "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env" || true
   export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.bun/bin:$PATH"
-  if ! command -v rustup >/dev/null 2>&1; then
-    run sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
-  fi
+
   if ! command -v bun >/dev/null 2>&1; then
     run sh -c 'curl -fsSL https://bun.sh/install | bash'
   fi
@@ -161,6 +145,16 @@ install_external_tools() {
     run sh -c 'curl -fsSL https://antigravity.google/cli/install.sh | bash' || true
   fi
   export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.bun/bin:$PATH"
+
+  # Mobile profile skips heavy compiler toolchains and secondary global manifests
+  if [[ "$PROFILE" == "mobile" ]]; then
+    log "Mobile profile: skipping rustup and secondary package manifests (minimalist AI stack)."
+    return
+  fi
+
+  if ! command -v rustup >/dev/null 2>&1; then
+    run sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
+  fi
   # reinstall user tools from manifests (lean, idempotent)
   if [[ -f "$DOTFILES_DIR/packages/uv-tools.txt" ]] && command -v uv >/dev/null 2>&1; then
     log "Reinstalling uv tools from packages/uv-tools.txt"

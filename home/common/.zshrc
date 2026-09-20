@@ -8,6 +8,11 @@ ZSH_THEME="" # Disabled — using Starship prompt instead
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 source "$ZSH/oh-my-zsh.sh"
 
+# ZSH Autosuggestions Tweaks (ergonomic for mobile virtual keyboard)
+bindkey '^ ' autosuggest-accept 2>/dev/null || true
+bindkey '^f' autosuggest-accept 2>/dev/null || true
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
 # Secrets (API keys, tokens, environment secrets)
 [[ -f "$HOME/.secrets" ]] && source "$HOME/.secrets"
 
