@@ -71,6 +71,7 @@ export PROJECT_DIR="$HOME/Projects"
 export BLOG_PATH="$PROJECT_DIR/digital-graveyard/content"
 export AIRFLOW_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/airflow"
 export TMPDIR="${XDG_RUNTIME_DIR:-$HOME/tmp}"
+[[ -d "$TMPDIR" ]] || mkdir -p "$TMPDIR"
 
 # PATH Composition (Priority: local bin -> user bin -> runtimes -> system)
 path=(
@@ -194,6 +195,15 @@ event() {
   elif [[ "$1" == "add" ]]; then
     shift
     uv --directory ~/Projects/ierp run ierp insert "$@"
+  elif [[ "$1" == "sync" ]]; then
+    shift
+    uv --directory ~/Projects/ierp run ierp r2 auto "$@"
+  elif [[ "$1" == "push" ]]; then
+    shift
+    uv --directory ~/Projects/ierp run ierp r2 push "$@"
+  elif [[ "$1" == "pull" ]]; then
+    shift
+    uv --directory ~/Projects/ierp run ierp r2 pull "$@"
   else
     uv --directory ~/Projects/ierp run ierp "$@"
   fi

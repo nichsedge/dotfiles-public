@@ -55,6 +55,10 @@ for f in "${FILES[@]}"; do
     echo "SKIP ${f}: missing in home"
     continue
   fi
+  if [[ -f "$dst" && "$src" -ef "$dst" ]]; then
+    echo "SKIP ${f}: already symlinked"
+    continue
+  fi
   if [[ "$DRY_RUN" == true ]]; then
     echo "DRY-RUN cp ${src} ${dst}"
   else
