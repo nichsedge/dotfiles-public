@@ -34,6 +34,8 @@ elif [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
   source /usr/share/doc/fzf/examples/key-bindings.zsh
 elif [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
   source /usr/share/fzf/key-bindings.zsh
+elif command -v brew >/dev/null 2>&1 && [[ -f "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh" ]]; then
+  source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
 fi
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
