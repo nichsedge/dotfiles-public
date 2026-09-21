@@ -96,7 +96,14 @@ install_mobile_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v apt-get >/dev/null 2>&1; then
     run $sudo_cmd apt-get update
-    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term
+    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term zoxide eza bat fd-find
+    # Debian packages bat as batcat and fd-find as fdfind; symlink to standard names
+    if command -v batcat >/dev/null 2>&1 && ! command -v bat >/dev/null 2>&1; then
+      run $sudo_cmd ln -sf "$(command -v batcat)" /usr/local/bin/bat
+    fi
+    if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+      run $sudo_cmd ln -sf "$(command -v fdfind)" /usr/local/bin/fd
+    fi
     if command -v locale-gen >/dev/null 2>&1; then
       run sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen || true
       run locale-gen || true

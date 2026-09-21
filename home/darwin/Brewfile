@@ -11,6 +11,8 @@ brew "fd"
 brew "ripgrep"
 brew "eza"
 brew "zoxide"
+brew "bat"
+brew "gh"
 brew "git"
 
 # Shell
