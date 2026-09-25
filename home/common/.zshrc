@@ -135,7 +135,10 @@ alias lg="lazygit"
 alias kdiff="kitty +kitten diff"
 
 # Ecosystem & Workstation
+alias repos-status="$HOME/Projects/_scheduled_jobs/repos_status.py"
+alias repos="$HOME/Projects/_scheduled_jobs/repos_status.py"
 alias repos-sync="$HOME/Projects/_scheduled_jobs/sync_git_repos.sh"
+alias sync-devices="$HOME/Projects/_scheduled_jobs/sync_devices.py"
 alias ts="tailscale"
 alias ts-toggle="$HOME/.config/scripts/tailscale-toggle.sh"
 alias ts-menu="$HOME/.config/scripts/tailscale-menu.sh"
