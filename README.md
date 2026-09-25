@@ -1,6 +1,6 @@
 # dotfiles-public
 
-Public, secret-free bootstrap repo for my workstation defaults. The public repo is the first layer for a new device; private credentials and machine-specific workflow shortcuts are layered later from `~/Projects/creds`.
+Public, secret-free bootstrap repo for my workstation defaults. The public repo is the first layer for a new device; private credentials and machine-specific workflow shortcuts are layered later from `~/Projects/dotfiles-private`.
 
 ## First Install: Fedora GNOME
 
@@ -70,7 +70,7 @@ Private files are created if missing and are never committed:
 After SSH/GitHub auth is ready:
 
 ```bash
-git clone git@github.com:nichsedge/creds.git ~/Projects/creds
+git clone git@github.com:nichsedge/dotfiles-private.git ~/Projects/dotfiles-private
 ```
 
 Use the private repo for real credentials, GCP JSON files, SSH notes, CV/personal docs, project aliases, and machine-specific environment variables. See `private.example/` for the expected local-file shape.

@@ -11,7 +11,7 @@ The public repo expects optional private files in `$HOME`:
 Suggested private repo layout:
 
 ```text
-~/Projects/creds/
+~/Projects/dotfiles-private/
   gcp/                 # service-account and OAuth JSON files
   ssh/                 # notes only; avoid copying private keys unnecessarily
   personal/            # CV, LinkedIn exports, personal docs

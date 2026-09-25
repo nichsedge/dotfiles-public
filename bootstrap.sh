@@ -241,4 +241,4 @@ install_flags=()
 "${DOTFILES_DIR}/install.sh" "${install_flags[@]}"
 ensure_zsh_default_hint
 
-log "Bootstrap complete. Private setup can be layered from ~/Projects/creds later."
+log "Bootstrap complete. Private setup can be layered from ~/Projects/dotfiles-private later."
