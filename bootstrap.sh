@@ -96,7 +96,7 @@ install_mobile_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v apt-get >/dev/null 2>&1; then
     run $sudo_cmd apt-get update
-    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term zoxide eza bat fd-find
+    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term zoxide eza bat fd-find golang-go
     # Debian packages bat as batcat and fd-find as fdfind; symlink to standard names
     if command -v batcat >/dev/null 2>&1 && ! command -v bat >/dev/null 2>&1; then
       run $sudo_cmd ln -sf "$(command -v batcat)" /usr/local/bin/bat
@@ -110,9 +110,9 @@ install_mobile_packages() {
       run update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 || true
     fi
   elif command -v dnf >/dev/null 2>&1; then
-    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf unzip glibc-langpack-en ncurses-term
+    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf unzip glibc-langpack-en ncurses-term golang
   elif command -v pacman >/dev/null 2>&1; then
-    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf unzip
+    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf unzip go
   else
     log "No supported package manager found; skipping mobile packages."
   fi

@@ -82,6 +82,7 @@ path=(
   "$BUN_INSTALL/bin"
   "$NPM_DIR/bin"
   "$GO_HOME/bin"
+  "$HOME/go/bin"
   "$ANDROID_HOME/platform-tools"
   "$HOME/.opencode/bin"
   $path
