@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Antigravity
+Exec=sh -c 'exec "$HOME/bin/Antigravity-x64/antigravity" "$@"' -- %U
+Icon=antigravity
+Comment=Antigravity Application
+Categories=Development;
+MimeType=x-scheme-handler/antigravity;x-scheme-handler/antigravity-app;
+Terminal=false
+StartupWMClass=antigravity
+StartupNotify=true
+

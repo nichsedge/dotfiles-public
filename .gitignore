@@ -3,6 +3,8 @@
 .zshrc.local
 .profile.local
 *.local
+!**/.local/
+!**/.local/**
 
 # Credential and token formats
 *.pem

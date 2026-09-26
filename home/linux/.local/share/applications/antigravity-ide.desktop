@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Antigravity IDE
+Exec=sh -c 'exec "$HOME/bin/Antigravity IDE/antigravity-ide" --open-url "$@"' -- %U
+Icon=antigravity-ide
+Comment=Antigravity Integrated Development Environment
+Categories=Development;IDE;
+MimeType=x-scheme-handler/antigravity-ide;
+Terminal=false
+StartupWMClass=antigravity-ide
+StartupNotify=true

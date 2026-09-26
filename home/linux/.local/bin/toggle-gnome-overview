@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+import dbus
+
+try:
+    bus = dbus.SessionBus()
+    shell = bus.get_object('org.gnome.Shell', '/org/gnome/Shell')
+    props = dbus.Interface(shell, 'org.freedesktop.DBus.Properties')
+    current = bool(props.Get('org.gnome.Shell', 'OverviewActive'))
+    props.Set('org.gnome.Shell', 'OverviewActive', dbus.Boolean(not current))
+except Exception:
+    pass

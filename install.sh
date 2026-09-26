@@ -28,7 +28,7 @@ Symlink public dotfiles from ./home into $HOME, backing up existing files first.
 Options:
   --dry-run   Print actions without changing files
   --force     Replace an existing file/link even when it is not managed here
-  --headless  Install CLI-only dotfiles; skip desktop GUI files (Hyprland, Waybar, Ghostty, .desktop)
+  --headless  Install CLI-only dotfiles; skip desktop GUI files (Niri, Ghostty, .desktop)
 USAGE
 }
 
@@ -77,22 +77,17 @@ PLATFORM_FILES=(
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
   "Projects/misc/update_antigravity.sh"
-  ".config/hypr/hyprland.conf"
-  ".config/hypr/hyprlock.conf"
-  ".config/hypr/hypridle.conf"
-  ".config/hypr/hyprpaper.conf"
-  ".config/hypr/scripts/brightness.sh"
-  ".config/hypr/scripts/cheatsheet.sh"
-  ".config/hypr/scripts/clipboard.sh"
-  ".config/hypr/scripts/clipboard_fav.sh"
-  ".config/hypr/scripts/powermenu.sh"
-  ".config/hypr/scripts/screenshot.sh"
-  ".config/hypr/scripts/volume.sh"
-  ".config/hypr/scripts/wallpaper.sh"
-  ".config/waybar/config"
-  ".config/waybar/style.css"
-  ".config/wofi/config"
-  ".config/wofi/style.css"
+  ".local/bin/toggle-gnome-overview"
+  ".config/niri/config.kdl"
+  ".config/niri/hypridle.conf"
+  ".config/niri/dms/colors.kdl"
+  ".config/niri/dms/layout.kdl"
+  ".config/niri/dms/wpblur.kdl"
+  ".config/niri/dms/alttab.kdl"
+  ".config/niri/dms/input.kdl"
+  ".config/niri/dms/windowrules.kdl"
+  ".config/scripts/tailscale-menu.sh"
+  ".config/scripts/tailscale-toggle.sh"
 )
 
 if [[ "$PLATFORM" == "linux" && "$HEADLESS" != true ]]; then

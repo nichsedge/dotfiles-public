@@ -18,6 +18,17 @@ FILES=(
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
   "Projects/misc/update_antigravity.sh"
+  ".local/bin/toggle-gnome-overview"
+  ".config/niri/config.kdl"
+  ".config/niri/hypridle.conf"
+  ".config/niri/dms/colors.kdl"
+  ".config/niri/dms/layout.kdl"
+  ".config/niri/dms/wpblur.kdl"
+  ".config/niri/dms/alttab.kdl"
+  ".config/niri/dms/input.kdl"
+  ".config/niri/dms/windowrules.kdl"
+  ".config/scripts/tailscale-menu.sh"
+  ".config/scripts/tailscale-toggle.sh"
 )
 
 usage() {
