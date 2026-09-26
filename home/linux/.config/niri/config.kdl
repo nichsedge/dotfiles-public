@@ -343,6 +343,14 @@ window-rule {
     open-floating true
 }
 
+// Hotkey cheatsheet window rule
+window-rule {
+    match app-id=r#"^com\.nichsedge\.cheatsheet$"#
+    open-floating true
+    default-column-width { fixed 980; }
+    default-window-height { fixed 680; }
+}
+
 // Enable drop shadows on floating windows
 window-rule {
     match is-floating=true
@@ -374,8 +382,8 @@ binds {
     // =========================================================================
     // 0. HOTKEYS OVERLAY & CHEATSHEET
     // =========================================================================
-    Mod+Slash hotkey-overlay-title="Show Hotkey Overlay" { show-hotkey-overlay; }
-    Mod+Shift+Slash hotkey-overlay-title=null { show-hotkey-overlay; }
+    Mod+Slash hotkey-overlay-title="Interactive Hotkey Cheatsheet" { spawn-sh "~/.config/scripts/hotkey-cheatsheet.py"; }
+    Mod+Shift+Slash hotkey-overlay-title="Niri Built-in Hotkey Overlay" { show-hotkey-overlay; }
 
     // =========================================================================
     // 1. APPLICATION LAUNCHERS & SYSTEM UTILITIES

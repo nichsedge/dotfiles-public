@@ -29,6 +29,7 @@ FILES=(
   ".config/niri/dms/windowrules.kdl"
   ".config/scripts/tailscale-menu.sh"
   ".config/scripts/tailscale-toggle.sh"
+  ".config/scripts/hotkey-cheatsheet.py"
 )
 
 usage() {
