@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=Antigravity
-Exec=sh -c 'exec "$HOME/bin/Antigravity-x64/antigravity" "$@"' -- %U
+Exec=antigravity %U
 Icon=antigravity
 Comment=Antigravity Application
 Categories=Development;
