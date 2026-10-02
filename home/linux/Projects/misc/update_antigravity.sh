@@ -343,13 +343,21 @@ install_component() {
         chmod 4755 "$target_dir/chrome-sandbox" 2>/dev/null || chmod +x "$target_dir/chrome-sandbox" 2>/dev/null || true
     fi
 
-    # Update symlink
-    log "Updating symlink at $symlink_path..."
-    rm -f "$symlink_path"
+    # Update symlinks
+    log "Updating symlinks in $INSTALL_DIR and $HOME/.local/bin..."
+    mkdir -p "$HOME/.local/bin"
+    rm -f "$symlink_path" "$HOME/.local/bin/$binary"
     if [[ -f "$target_dir/$bin_subpath" ]]; then
         ln -sf "$target_dir/$bin_subpath" "$symlink_path"
+        ln -sf "$target_dir/$bin_subpath" "$HOME/.local/bin/$binary"
     else
         ln -sf "$target_dir/$binary" "$symlink_path"
+        ln -sf "$target_dir/$binary" "$HOME/.local/bin/$binary"
+    fi
+
+    if [[ "$comp" == "hub" ]]; then
+        ln -sf "$target_dir/$binary" "$INSTALL_DIR/antigravity-hub"
+        ln -sf "$target_dir/$binary" "$HOME/.local/bin/antigravity-hub"
     fi
 
     # Save version record

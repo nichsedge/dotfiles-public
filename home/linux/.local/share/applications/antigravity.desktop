@@ -1,13 +1,14 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Antigravity
+Name=Antigravity Hub
+GenericName=Antigravity Agent Hub
 Exec=antigravity %U
 Icon=antigravity
-Comment=Antigravity Application
+Comment=Antigravity Desktop Application & Agent Hub
 Categories=Development;
+Keywords=antigravity;hub;agent;gemini;
 MimeType=x-scheme-handler/antigravity;x-scheme-handler/antigravity-app;
 Terminal=false
 StartupWMClass=antigravity
 StartupNotify=true
-
