@@ -138,10 +138,29 @@ alias kdiff="kitty +kitten diff"
 alias repos-status="$HOME/Projects/_scheduled_jobs/repos_status.py"
 alias repos="$HOME/Projects/_scheduled_jobs/repos_status.py"
 alias repos-sync="$HOME/Projects/_scheduled_jobs/sync_git_repos.sh"
+alias repos-wip="$HOME/Projects/_scheduled_jobs/repos_status.py -W"
+alias repos-load="$HOME/Projects/_scheduled_jobs/repos_status.py -L"
+alias repos-clean="$HOME/Projects/_scheduled_jobs/repos_status.py --clean-wip"
 alias sync-devices="$HOME/Projects/_scheduled_jobs/sync_devices.py"
 alias ts="tailscale"
 alias ts-toggle="$HOME/.config/scripts/tailscale-toggle.sh"
 alias ts-menu="$HOME/.config/scripts/tailscale-menu.sh"
+
+# Multi-Device Workstation Pre-Flight & Post-Flight Discipline
+preflight() {
+  echo "🚀 Running Workstation Pre-Flight Routine..."
+  event pull
+  "$HOME/Projects/_scheduled_jobs/repos_status.py" -p
+  echo "✓ Pre-flight complete. Ready to build."
+}
+
+postflight() {
+  echo "🛫 Running Workstation Post-Flight Routine..."
+  event push
+  "$HOME/Projects/_scheduled_jobs/repos_status.py" -P
+  "$HOME/Projects/_scheduled_jobs/repos_status.py" -d
+  echo "✓ Post-flight complete. (Tip: Use 'repos-wip' to snapshot dirty trees to shadow branch if switching devices)."
+}
 
 # Global Pipes (e.g. ps aux G python, cat data.json J)
 alias -g G="| rg"
