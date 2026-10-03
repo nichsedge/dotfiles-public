@@ -34,6 +34,8 @@ elif [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
   source /usr/share/doc/fzf/examples/key-bindings.zsh
 elif [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
   source /usr/share/fzf/key-bindings.zsh
+elif [[ -n "$PREFIX" ]] && [[ -f "$PREFIX/share/fzf/key-bindings.zsh" ]]; then
+  source "$PREFIX/share/fzf/key-bindings.zsh"
 elif command -v brew >/dev/null 2>&1 && [[ -f "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh" ]]; then
   source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
 fi
@@ -262,3 +264,7 @@ git_laataiasu() {
 if [[ -n "$SSH_CONNECTION" ]] && [[ -z "$ZELLIJ" ]]; then
   zellij attach -c main
 fi
+
+# Local Shell Overrides
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
