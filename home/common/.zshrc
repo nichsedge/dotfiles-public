@@ -264,11 +264,33 @@ if [[ -n "$SSH_CONNECTION" ]] && [[ -z "$ZELLIJ" ]]; then
   zellij attach -c main
 fi
 
-# Antigravity CLI (strip remote SSH markers so it uses host OS keyring seamlessly)
+# Antigravity CLI (strip remote SSH markers, handle YOLO/permissions, use host OS keyring seamlessly)
 agy() {
+  local agy_bin="$HOME/.local/bin/agy"
+  if [[ ! -x "$agy_bin" ]]; then
+    agy_bin="$(command -v agy 2>/dev/null)"
+  fi
+  if [[ -z "$agy_bin" || ! -x "$agy_bin" ]]; then
+    echo "agy: binary not found at ~/.local/bin/agy or in PATH" >&2 && return 127
+  fi
+
+  local -a args=()
+  if [[ "$1" == "yolo" ]]; then
+    shift
+    args+=(--dangerously-skip-permissions -c)
+  fi
+
+  for arg in "$@"; do
+    if [[ "$arg" == "-y" ]]; then
+      args+=(--dangerously-skip-permissions)
+    else
+      args+=("$arg")
+    fi
+  done
+
   env -u SSH_CLIENT -u SSH_CONNECTION -u SSH_TTY \
       DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/user/$(id -u)/bus}" \
-      command agy "$@"
+      "$agy_bin" "${args[@]}"
 }
 alias agy-yolo="agy yolo"
 alias agyy="agy yolo"
