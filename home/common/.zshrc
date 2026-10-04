@@ -137,13 +137,12 @@ alias lg="lazygit"
 alias kdiff="kitty +kitten diff"
 
 # Ecosystem & Workstation
-alias repos-status="$HOME/Projects/_scheduled_jobs/repos_status.py"
-alias repos="$HOME/Projects/_scheduled_jobs/repos_status.py"
-alias repos-sync="$HOME/Projects/_scheduled_jobs/sync_git_repos.sh"
-alias repos-wip="$HOME/Projects/_scheduled_jobs/repos_status.py -W"
-alias repos-load="$HOME/Projects/_scheduled_jobs/repos_status.py -L"
-alias repos-clean="$HOME/Projects/_scheduled_jobs/repos_status.py --clean-wip"
-alias sync-devices="$HOME/Projects/_scheduled_jobs/sync_devices.py"
+alias repos="repos-status"
+alias repos-sync="repos-status -p"
+alias repos-wip="repos-status -W"
+alias repos-load="repos-status -L"
+alias repos-clean="repos-status --clean-wip"
+alias check-deps="check-dependencies"
 alias ts="tailscale"
 alias ts-toggle="$HOME/.config/scripts/tailscale-toggle.sh"
 alias ts-menu="$HOME/.config/scripts/tailscale-menu.sh"
@@ -152,15 +151,15 @@ alias ts-menu="$HOME/.config/scripts/tailscale-menu.sh"
 preflight() {
   echo "🚀 Running Workstation Pre-Flight Routine..."
   event pull
-  "$HOME/Projects/_scheduled_jobs/repos_status.py" -p
+  repos-status -p
   echo "✓ Pre-flight complete. Ready to build."
 }
 
 postflight() {
   echo "🛫 Running Workstation Post-Flight Routine..."
   event push
-  "$HOME/Projects/_scheduled_jobs/repos_status.py" -P
-  "$HOME/Projects/_scheduled_jobs/repos_status.py" -d
+  repos-status -P
+  repos-status -d
   echo "✓ Post-flight complete. (Tip: Use 'repos-wip' to snapshot dirty trees to shadow branch if switching devices)."
 }
 
