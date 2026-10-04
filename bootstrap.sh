@@ -13,7 +13,7 @@ Usage: ./bootstrap.sh [--profile fedora-gnome|minimal|mobile] [--no-packages] [-
 Bootstraps a new machine using this public dotfiles repo.
 
 Options:
-  --profile NAME  Install profile: fedora-gnome, minimal, or mobile (PRoot/Debian/headless). Default: fedora-gnome
+  --profile NAME  Install profile: fedora-gnome, minimal, or mobile (Native Termux/headless). Default: fedora-gnome
   --no-packages   Skip package and external tool installation
   --dry-run       Print actions without changing files
 USAGE
@@ -94,7 +94,10 @@ install_minimal_packages() {
 
 install_mobile_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
-  if command -v apt-get >/dev/null 2>&1; then
+  if command -v pkg >/dev/null 2>&1; then
+    run pkg update -y
+    run pkg install -y git curl zsh ripgrep fzf unzip ca-certificates ncurses-utils zoxide eza bat fd golang starship termux-api
+  elif command -v apt-get >/dev/null 2>&1; then
     run $sudo_cmd apt-get update
     run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term zoxide eza bat fd-find golang-go
     # Debian packages bat as batcat and fd-find as fdfind; symlink to standard names
@@ -190,14 +193,17 @@ install_external_tools() {
 
 ensure_zsh_default_hint() {
   if [[ "$PROFILE" == "mobile" ]]; then
+    if command -v chsh >/dev/null 2>&1 && [[ "${SHELL:-}" != *zsh ]]; then
+      run chsh -s "$(command -v zsh || echo "$PREFIX/bin/zsh")" || true
+    fi
     if [[ -f "$HOME/.bashrc" ]] && ! grep -q "exec zsh" "$HOME/.bashrc"; then
-      log "Adding automatic Zsh switch to $HOME/.bashrc for PRoot compatibility"
+      log "Adding automatic Zsh switch to $HOME/.bashrc"
       if [[ "$DRY_RUN" == true ]]; then
         log "DRY-RUN append auto-switch to zsh in $HOME/.bashrc"
       else
         cat << 'EOF' >> "$HOME/.bashrc"
 
-# Auto switch to zsh in PRoot
+# Auto switch to zsh
 if [ -t 1 ] && [ -n "${PS1:-}" ] && [ -x "$(command -v zsh 2>/dev/null)" ]; then
   export SHELL="$(command -v zsh)"
   exec zsh

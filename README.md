@@ -11,25 +11,20 @@ cd ~/Projects/dotfiles-public
 ./bootstrap.sh --profile fedora-gnome
 ```
 
-## First Install: Mobile / Headless (Termux PRoot Debian)
+## First Install: Mobile / Headless (Native Termux Android)
 
-For Android devices (e.g. Xiaomi 14T Pro) running Termux + PRoot Debian to support full glibc runtimes (`uv`, `bun`, `agy` CLI):
+For Android devices (e.g. Xiaomi 14T Pro) running 100% Native Termux standalone (running native `zsh`, `starship`, `uv`, `bun`, `go`, and `agy` CLI):
 
 ```bash
-# 1. In native Termux: install PRoot Debian
-pkg update && pkg install proot-distro
-proot-distro install debian
-proot-distro login debian --shared-tmp -- /bin/zsh
-
-# 2. In PRoot Debian: bootstrap dotfiles
-apt-get update && apt-get install -y git curl sudo
+# In native Termux:
+pkg update && pkg install -y git curl zsh
 mkdir -p ~/Projects
 git clone https://github.com/nichsedge/dotfiles-public.git ~/Projects/dotfiles-public
 cd ~/Projects/dotfiles-public
 ./bootstrap.sh --profile mobile
 ```
 
-> **Note**: PRoot hardcodes `/bin/bash -l` by default on login. `bootstrap.sh --profile mobile` automatically appends an auto-switch to `~/.bashrc`, or you can launch directly with `proot-distro login debian --shared-tmp -- /bin/zsh`.
+> **Note**: Termux runs natively with Android bionic libc and `$PREFIX/bin` (PRoot has been pruned). The `mobile` profile runs headless without GUI configs and sets up lean shell defaults.
 
 Preview without changing the machine:
 
