@@ -64,7 +64,7 @@ Platform-specific extras (Linux desktop):
 - **Niri Compositor & DMS**: `.config/niri/config.kdl`, `hypridle.conf`, and modular `dms/*.kdl`.
 - **Desktop Helpers**: `.config/scripts/tailscale-menu.sh`, `tailscale-toggle.sh`, `.local/bin/toggle-gnome-overview`.
 - **GNOME Synchronization**: `scripts/desktop/gnome/set-config.sh` (standardizes GNOME 1:1 with Niri/Mac).
-- **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `Projects/misc/update_antigravity.sh`.
+- **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `.local/bin/update-antigravity`.
 
 Private files are created if missing and are never committed:
 

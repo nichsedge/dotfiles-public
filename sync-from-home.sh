@@ -17,7 +17,7 @@ FILES=(
   "Projects/sync_git_repos.sh"
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
-  "Projects/misc/update_antigravity.sh"
+  ".local/bin/update-antigravity"
   ".local/bin/toggle-gnome-overview"
   ".config/niri/config.kdl"
   ".config/niri/hypridle.conf"
