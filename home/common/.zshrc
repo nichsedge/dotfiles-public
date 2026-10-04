@@ -1,6 +1,12 @@
 # ==============================================================================
-# Workstation Shell Configuration (Amal @ al@fedora)
+# Workstation Shell Configuration (Amal @ al@fedora & al@termux)
 # ==============================================================================
+
+# Platform Detection (Fedora Workstation vs Native Termux)
+IS_TERMUX=false
+if [[ -n "${TERMUX_VERSION:-}" || -d "/data/data/com.termux" ]]; then
+  IS_TERMUX=true
+fi
 
 # Locale & Terminal Settings
 export LANG="${LANG:-en_US.UTF-8}"
@@ -63,7 +69,7 @@ export TERMINAL="ghostty"
 export COLORTERM="truecolor"
 
 # Runtime Homes
-export JAVA_HOME="/usr/lib/jvm/java-openjdk"
+[[ -d "/usr/lib/jvm/java-openjdk" ]] && export JAVA_HOME="/usr/lib/jvm/java-openjdk"
 export ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
 export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$HOME/Android/Sdk}"
 export GO_HOME="$HOME/bin/go"
@@ -74,7 +80,11 @@ export BUN_INSTALL="$HOME/.bun"
 export PROJECT_DIR="$HOME/Projects"
 export BLOG_PATH="$PROJECT_DIR/digital-graveyard/content"
 export AIRFLOW_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/airflow"
-export TMPDIR="${XDG_RUNTIME_DIR:-$HOME/tmp}"
+if [[ "$IS_TERMUX" == true ]]; then
+  export TMPDIR="${PREFIX:-/data/data/com.termux/files/usr}/tmp"
+else
+  export TMPDIR="${XDG_RUNTIME_DIR:-$HOME/tmp}"
+fi
 [[ -d "$TMPDIR" ]] || mkdir -p "$TMPDIR"
 
 # PATH Composition (Priority: local bin -> user bin -> runtimes -> system)
@@ -95,14 +105,17 @@ export PATH
 # Aliases
 # ==============================================================================
 # System Maintenance
-if command -v dnf >/dev/null 2>&1; then
+if [[ "$IS_TERMUX" == true ]] && command -v pkg >/dev/null 2>&1; then
+  alias up="pkg update && pkg upgrade -y"
+  alias clean="pkg clean"
+elif command -v dnf >/dev/null 2>&1; then
   alias up="sudo dnf upgrade -y && flatpak update -y && update-antigravity update"
   alias clean="sudo dnf autoremove -y && sudo dnf clean all"
 elif command -v apt-get >/dev/null 2>&1; then
   alias up="apt-get update && apt-get upgrade -y"
   alias clean="apt-get autoremove -y && apt-get clean"
 fi
-alias ports="ss -tulpn"
+alias ports="ss -tulpn 2>/dev/null || netstat -tlpn 2>/dev/null || echo 'ports inspection requires elevated net privileges'"
 alias now="date +%T"
 alias reload="source ~/.zshrc && echo \"✓ ~/.zshrc reloaded!\""
 alias c="clear"
@@ -123,7 +136,7 @@ fi
 alias count="fd --type f . | wc -l"
 
 # Memory Optimization for Mobile / PRoot / Resource-Constrained Environments
-if [[ -n "${PROOT_TMP_DIR:-}" || -d "/data/data/com.termux" || ( "$(uname -m)" == "aarch64" && ! -d "/sys/class/dmi" ) ]]; then
+if [[ "$IS_TERMUX" == true || -n "${PROOT_TMP_DIR:-}" || ( "$(uname -m)" == "aarch64" && ! -d "/sys/class/dmi" ) ]]; then
   export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=512}"
 fi
 
@@ -259,12 +272,12 @@ git_laataiasu() {
   git config --local user.name "laataiasu"
 }
 
-# Remote Mobile Auto-Attach (Zellij)
-if [[ -n "$SSH_CONNECTION" ]] && [[ -z "$ZELLIJ" ]]; then
+# Remote Mobile Auto-Attach (Zellij) - Workstation only
+if [[ "$IS_TERMUX" != true ]] && [[ -n "$SSH_CONNECTION" ]] && [[ -z "$ZELLIJ" ]] && command -v zellij >/dev/null 2>&1; then
   zellij attach -c main
 fi
 
-# Antigravity CLI (strip remote SSH markers, handle YOLO/permissions, use host OS keyring seamlessly)
+# Antigravity CLI (strip remote SSH markers on workstation, handle YOLO/permissions)
 agy() {
   local agy_bin="$HOME/.local/bin/agy"
   if [[ ! -x "$agy_bin" ]]; then
@@ -288,9 +301,13 @@ agy() {
     fi
   done
 
-  env -u SSH_CLIENT -u SSH_CONNECTION -u SSH_TTY \
-      DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/user/$(id -u)/bus}" \
-      "$agy_bin" "${args[@]}"
+  if [[ "$IS_TERMUX" == true ]]; then
+    "$agy_bin" "${args[@]}"
+  else
+    env -u SSH_CLIENT -u SSH_CONNECTION -u SSH_TTY \
+        DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/user/$(id -u)/bus}" \
+        "$agy_bin" "${args[@]}"
+  fi
 }
 alias agy-yolo="agy yolo"
 alias agyy="agy yolo"
