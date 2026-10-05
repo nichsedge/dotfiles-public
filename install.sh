@@ -8,6 +8,9 @@ DRY_RUN=false
 FORCE=false
 
 HEADLESS=false
+if [[ -d "/data/data/com.termux" ]] || [[ -n "${TERMUX_VERSION:-}" ]]; then
+  HEADLESS=true
+fi
 
 # Detect platform: home/common/ is always linked; home/<platform>/ adds OS-specific files.
 case "$(uname -s)" in

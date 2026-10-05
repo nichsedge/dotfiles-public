@@ -3,6 +3,9 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROFILE="fedora-gnome"
+if [[ -d "/data/data/com.termux" ]] || [[ -n "${TERMUX_VERSION:-}" ]]; then
+  PROFILE="mobile"
+fi
 INSTALL_PACKAGES=true
 DRY_RUN=false
 
