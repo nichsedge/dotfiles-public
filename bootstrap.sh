@@ -99,7 +99,16 @@ install_mobile_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v pkg >/dev/null 2>&1; then
     run pkg update -y
-    run pkg install -y git curl zsh ripgrep fzf unzip ca-certificates ncurses-utils zoxide eza bat fd golang starship termux-api
+    if [[ -f "$DOTFILES_DIR/packages/termux.txt" ]]; then
+      local termux_pkgs=()
+      while IFS= read -r p; do
+        [[ -z "$p" || "$p" == \#* ]] && continue
+        termux_pkgs+=("$p")
+      done < "$DOTFILES_DIR/packages/termux.txt"
+      run pkg install -y "${termux_pkgs[@]}"
+    else
+      run pkg install -y git curl zsh ripgrep fzf unzip ca-certificates ncurses-utils zoxide eza bat fd golang starship termux-api python cronie jq git-delta gh uv bun
+    fi
   elif command -v apt-get >/dev/null 2>&1; then
     run $sudo_cmd apt-get update
     run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term zoxide eza bat fd-find golang-go

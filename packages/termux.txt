@@ -1,0 +1,26 @@
+# Core terminal & shell
+zsh
+starship
+zoxide
+fzf
+ripgrep
+fd
+bat
+eza
+git-delta
+jq
+unzip
+ca-certificates
+ncurses-utils
+
+# Version control & developer tools
+git
+gh
+
+# Runtimes & system bridges
+python
+golang
+bun
+uv
+termux-api
+cronie
