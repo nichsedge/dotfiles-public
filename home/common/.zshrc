@@ -230,21 +230,21 @@ EOF
 # iERP Event Logging and CRM Helper
 event() {
   if [[ $# -eq 0 ]]; then
-    uv --directory ~/Projects/ierp run ierp list --limit 10
+    ierp list --limit 10
   elif [[ "$1" == "add" ]]; then
     shift
-    uv --directory ~/Projects/ierp run ierp insert "$@"
+    ierp insert "$@"
   elif [[ "$1" == "sync" ]]; then
     shift
-    uv --directory ~/Projects/ierp run ierp r2 auto "$@"
+    ierp r2 auto "$@"
   elif [[ "$1" == "push" ]]; then
     shift
-    uv --directory ~/Projects/ierp run ierp r2 push "$@"
+    ierp r2 push "$@"
   elif [[ "$1" == "pull" ]]; then
     shift
-    uv --directory ~/Projects/ierp run ierp r2 pull "$@"
+    ierp r2 pull "$@"
   else
-    uv --directory ~/Projects/ierp run ierp "$@"
+    ierp "$@"
   fi
 }
 
