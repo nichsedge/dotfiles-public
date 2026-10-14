@@ -5,7 +5,18 @@ DRY_RUN=false
 RELOAD=true
 EXTENSION_UUID="dash-to-dock@micxgx.gmail.com"
 EXTENSION_DIR="${EXTENSION_DIR:-$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID}"
-SOURCE_SVG="${SOURCE_SVG:-$HOME/Projects/misc/MacTahoe-gtk-theme/src/assets/gnome-shell/common-assets/view-app-grid.svg}"
+if [[ -z "${SOURCE_SVG:-}" ]]; then
+  for candidate in \
+    "$HOME/.local/share/icons/MacTahoe/apps/scalable/view-app-grid.svg" \
+    "$HOME/Projects/MacTahoe-icon-theme/src/apps/scalable/view-app-grid.svg" \
+    "$HOME/Projects/misc/MacTahoe-gtk-theme/src/assets/gnome-shell/common-assets/view-app-grid.svg"; do
+    if [[ -f "$candidate" ]]; then
+      SOURCE_SVG="$candidate"
+      break
+    fi
+  done
+fi
+SOURCE_SVG="${SOURCE_SVG:-$HOME/.local/share/icons/MacTahoe/apps/scalable/view-app-grid.svg}"
 TARGET_SVG="$EXTENSION_DIR/media/view-app-grid.svg"
 STYLESHEET="$EXTENSION_DIR/stylesheet.css"
 BLOCK_BEGIN="/* BEGIN dotfiles-public MacTahoe show-apps icon override */"
