@@ -10,7 +10,7 @@ input {
     touchpad {
         tap
         accel-speed 0.0
-        // natural-scroll
+        natural-scroll
         dwt
     }
 }
