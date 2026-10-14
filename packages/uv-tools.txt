@@ -1,4 +1,5 @@
 browser-use
 git-filter-repo
+graphifyy
 rendercv
 snsr
