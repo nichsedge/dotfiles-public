@@ -27,20 +27,14 @@ def main():
         if token:
             platform_data["activation-token"] = dbus.String(token)
 
-        # 1. Trigger new-tab on the existing window
+        # Trigger new-tab on the existing window (GTK automatically focuses via activation token)
         target_window = f"/com/mitchellh/ghostty/window/{windows[-1]}"
         win_actions = dbus.Interface(
             bus.get_object("com.mitchellh.ghostty", target_window),
             "org.gtk.Actions",
         )
         win_actions.Activate("new-tab", [], platform_data)
-
-        # 2. Focus / activate application window
-        app = dbus.Interface(
-            bus.get_object("com.mitchellh.ghostty", "/com/mitchellh/ghostty"),
-            "org.gtk.Application",
-        )
-        app.Activate(platform_data)
+        return
 
     except Exception:
         # Fallback: start a fresh ghostty process
