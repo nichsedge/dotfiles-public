@@ -6,6 +6,9 @@ browser-use v0.13.10
 - bu
 git-filter-repo v2.47.0
 - git-filter-repo
+graphifyy v0.9.90
+- graphify
+- graphify-mcp
 rendercv v2.8
 - rendercv
 snsr v0.1.9

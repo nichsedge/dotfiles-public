@@ -56,12 +56,12 @@ case "$(uname -s)" in
   *) echo "Unsupported platform: $(uname -s)"; exit 1 ;;
 esac
 
-# Include COSMIC desktop configs on Linux if present
+# Include COSMIC desktop configs on Linux if present (excluding personal wallpaper paths)
 if [[ "$PLATFORM" == "linux" && -d "${HOME_DIR}/.config/cosmic" ]]; then
   while IFS= read -r file; do
     rel="${file#${HOME_DIR}/}"
     FILES+=("$rel")
-  done < <(find "${HOME_DIR}/.config/cosmic" -type f 2>/dev/null || true)
+  done < <(find "${HOME_DIR}/.config/cosmic" -type f ! -path "*/com.system76.CosmicBackground/*" ! -path "*/com.system76.CosmicSettings.Wallpaper/*" 2>/dev/null || true)
 fi
 
 for f in "${FILES[@]}"; do
