@@ -82,6 +82,8 @@ PLATFORM_FILES=(
   ".local/bin/update-antigravity"
   ".local/bin/toggle-gnome-overview"
   ".local/bin/ghostty-tab"
+  ".local/bin/cosmic-clipboard"
+  ".config/systemd/user/cliphist.service"
   ".config/niri/config.kdl"
   ".config/niri/hypridle.conf"
   ".config/niri/dms/colors.kdl"

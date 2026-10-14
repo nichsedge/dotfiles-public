@@ -19,6 +19,8 @@ FILES=(
   ".local/share/applications/antigravity-ide.desktop"
   ".local/bin/update-antigravity"
   ".local/bin/toggle-gnome-overview"
+  ".local/bin/cosmic-clipboard"
+  ".config/systemd/user/cliphist.service"
   ".config/niri/config.kdl"
   ".config/niri/hypridle.conf"
   ".config/niri/dms/colors.kdl"
