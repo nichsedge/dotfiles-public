@@ -71,6 +71,11 @@ if [[ ! -f "$SOURCE_SVG" ]]; then
   exit 1
 fi
 
+if [[ -f "$TARGET_SVG" ]] && cmp -s "$SOURCE_SVG" "$TARGET_SVG" && grep -Fxq "$BLOCK_BEGIN" "$STYLESHEET" && ! grep -Fxq "$LEGACY_BLOCK_BEGIN" "$STYLESHEET"; then
+  log "OK Dash to Dock already has the MacTahoe icon and stylesheet override"
+  exit 0
+fi
+
 css_block() {
   cat <<EOF
 $BLOCK_BEGIN
@@ -139,9 +144,9 @@ write_stylesheet
 
 if [[ "$RELOAD" == true ]] && command -v gnome-extensions >/dev/null 2>&1; then
   if gnome-extensions info "$EXTENSION_UUID" >/dev/null 2>&1; then
-    run gnome-extensions disable "$EXTENSION_UUID"
+    run gnome-extensions disable "$EXTENSION_UUID" 2>/dev/null || true
     run sleep 1
-    run gnome-extensions enable "$EXTENSION_UUID"
+    run gnome-extensions enable "$EXTENSION_UUID" 2>/dev/null || true
   else
     log "SKIP reload: extension is not registered with gnome-extensions"
   fi

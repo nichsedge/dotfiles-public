@@ -1,0 +1,7 @@
+[Unit]
+Description=Reapply MacTahoe Show Apps icon to Dash to Dock
+After=default.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/Projects/dotfiles-public/scripts/desktop/gnome/apply-dash-to-dock-grid-icon.sh

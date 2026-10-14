@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch Dash to Dock extension for updates to reapply MacTahoe icon
+
+[Path]
+PathModified=%h/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/stylesheet.css
+Unit=dash-to-dock-icon.service
+
+[Install]
+WantedBy=default.target
