@@ -1,0 +1,3 @@
+{
+    (modifiers: [Super], key: "v", description: Some("Clipboard History")): Spawn("copyq toggle"),
+}
