@@ -99,6 +99,13 @@ if [[ "$PLATFORM" == "linux" && "$HEADLESS" != true ]]; then
   for f in "${PLATFORM_FILES[@]}"; do
     FILES+=("$f")
   done
+  # Dynamically include COSMIC desktop config files from home/linux/.config/cosmic
+  if [[ -d "${DOTFILES_DIR}/home/linux/.config/cosmic" ]]; then
+    while IFS= read -r file; do
+      rel="${file#${DOTFILES_DIR}/home/linux/}"
+      FILES+=("$rel")
+    done < <(find "${DOTFILES_DIR}/home/linux/.config/cosmic" -type f 2>/dev/null || true)
+  fi
 fi
 
 ensure_private_file() {
