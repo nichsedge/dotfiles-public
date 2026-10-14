@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+import os
+import subprocess
+import xml.etree.ElementTree as ET
+import dbus
+
+def main():
+    try:
+        bus = dbus.SessionBus()
+        if not bus.name_has_owner("com.mitchellh.ghostty"):
+            raise RuntimeError("Ghostty D-Bus service not running")
+
+        w_obj = bus.get_object("com.mitchellh.ghostty", "/com/mitchellh/ghostty/window")
+        intro = dbus.Interface(w_obj, "org.freedesktop.DBus.Introspectable").Introspect()
+        root = ET.fromstring(intro)
+        windows = sorted([
+            int(n.attrib["name"])
+            for n in root.findall("node")
+            if n.attrib.get("name", "").isdigit()
+        ])
+
+        if not windows:
+            raise RuntimeError("No open Ghostty window found")
+
+        platform_data = {}
+        token = os.environ.get("XDG_ACTIVATION_TOKEN") or os.environ.get("DESKTOP_STARTUP_ID")
+        if token:
+            platform_data["activation-token"] = dbus.String(token)
+
+        # 1. Trigger new-tab on the existing window
+        target_window = f"/com/mitchellh/ghostty/window/{windows[-1]}"
+        win_actions = dbus.Interface(
+            bus.get_object("com.mitchellh.ghostty", target_window),
+            "org.gtk.Actions",
+        )
+        win_actions.Activate("new-tab", [], platform_data)
+
+        # 2. Focus / activate application window
+        app = dbus.Interface(
+            bus.get_object("com.mitchellh.ghostty", "/com/mitchellh/ghostty"),
+            "org.gtk.Application",
+        )
+        app.Activate(platform_data)
+
+    except Exception:
+        # Fallback: start a fresh ghostty process
+        subprocess.Popen(["ghostty"])
+
+if __name__ == "__main__":
+    main()

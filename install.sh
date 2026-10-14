@@ -81,6 +81,7 @@ PLATFORM_FILES=(
   ".local/share/applications/antigravity-ide.desktop"
   ".local/bin/update-antigravity"
   ".local/bin/toggle-gnome-overview"
+  ".local/bin/ghostty-tab"
   ".config/niri/config.kdl"
   ".config/niri/hypridle.conf"
   ".config/niri/dms/colors.kdl"

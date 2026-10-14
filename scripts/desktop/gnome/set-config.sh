@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DRY_RUN=false
-TERMINAL_APP="${TERMINAL_APP:-ghostty}"
+TERMINAL_APP="${TERMINAL_APP:-${HOME}/.local/bin/ghostty-tab}"
 
 usage() {
   cat <<'USAGE'

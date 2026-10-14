@@ -57,7 +57,7 @@ Skip package installs when the OS is already prepared:
 
 Platform-specific extras (Linux desktop):
 - **Niri Compositor & DMS**: `.config/niri/config.kdl`, `hypridle.conf`, and modular `dms/*.kdl`.
-- **Desktop Helpers**: `.config/scripts/tailscale-menu.sh`, `tailscale-toggle.sh`, `.local/bin/toggle-gnome-overview`.
+- **Desktop Helpers**: `.config/scripts/tailscale-menu.sh`, `tailscale-toggle.sh`, `.local/bin/toggle-gnome-overview`, `.local/bin/ghostty-tab`.
 - **GNOME Synchronization**: `scripts/desktop/gnome/set-config.sh` (standardizes GNOME 1:1 with Niri/Mac).
 - **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `.local/bin/update-antigravity`.
 
