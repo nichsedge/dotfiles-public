@@ -17,6 +17,8 @@ FILES=(
   "Projects/sync_git_repos.sh"
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
+  ".local/share/applications/cosmic-clipboard.desktop"
+  ".local/share/applications/dev.nichsedge.CosmicPanelClipboardButton.desktop"
   ".local/bin/update-antigravity"
   ".local/bin/toggle-gnome-overview"
   ".local/bin/cosmic-clipboard"

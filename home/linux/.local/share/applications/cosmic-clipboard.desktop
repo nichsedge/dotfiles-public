@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Type=Application
+Name=Clipboard History
+GenericName=Clipboard Manager
+Comment=Sleek native clipboard history manager with image and media support
+Exec=cosmic-clipboard
+Icon=edit-paste-symbolic
+StartupWMClass=dev.nichsedge.cosmic.clipboard
+Categories=Utility;
