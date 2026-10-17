@@ -95,6 +95,9 @@ PLATFORM_FILES=(
   ".config/scripts/tailscale-menu.sh"
   ".config/scripts/tailscale-toggle.sh"
   ".config/scripts/hotkey-cheatsheet.py"
+  ".local/share/icons/default/index.theme"
+  ".local/share/flatpak/overrides/global"
+  ".local/share/flatpak/overrides/org.videolan.VLC"
 )
 
 if [[ "$PLATFORM" == "linux" && "$HEADLESS" != true ]]; then
@@ -187,5 +190,10 @@ if [[ "$PLATFORM" == "linux" && "$HEADLESS" != true ]]; then
   fi
   if command -v xdg-mime >/dev/null 2>&1; then
     run xdg-mime default antigravity-ide.desktop x-scheme-handler/antigravity-ide
+  fi
+
+  # Ensure legacy ~/.icons points to modern ~/.local/share/icons for Flatpak Xwayland cursor support
+  if [[ ! -e "${HOME_DIR}/.icons" && -d "${HOME_DIR}/.local/share/icons" ]]; then
+    run ln -s "${HOME_DIR}/.local/share/icons" "${HOME_DIR}/.icons"
   fi
 fi

@@ -351,6 +351,14 @@ window-rule {
     default-window-height { fixed 680; }
 }
 
+// Clipboard History window rule
+window-rule {
+    match app-id=r#"^dev\.nichsedge\.cosmic\.clipboard$"#
+    open-floating true
+    default-column-width { fixed 530; }
+    default-window-height { fixed 620; }
+}
+
 // Enable drop shadows on floating windows
 window-rule {
     match is-floating=true
@@ -394,7 +402,7 @@ binds {
     Mod+T hotkey-overlay-title=null { spawn "ghostty" "--window-decoration=false"; }
     Mod+B hotkey-overlay-title="Web Browser (Chrome)" { spawn "google-chrome-stable"; }
     Mod+E hotkey-overlay-title="File Manager (Nautilus)" { spawn "nautilus" "--new-window"; }
-    Mod+V hotkey-overlay-title="Clipboard History (DMS)" { spawn "dms" "ipc" "call" "clipboard" "toggle"; }
+    Mod+V hotkey-overlay-title="Clipboard History" { spawn "cosmic-clipboard"; }
     Mod+N hotkey-overlay-title="Control Center (DMS)" { spawn "dms" "ipc" "call" "control-center" "toggle"; }
     Mod+Shift+T hotkey-overlay-title="Tailscale VPN Menu" { spawn-sh "~/.config/scripts/tailscale-menu.sh"; }
 

@@ -32,6 +32,9 @@ FILES=(
   ".config/scripts/tailscale-menu.sh"
   ".config/scripts/tailscale-toggle.sh"
   ".config/scripts/hotkey-cheatsheet.py"
+  ".local/share/icons/default/index.theme"
+  ".local/share/flatpak/overrides/global"
+  ".local/share/flatpak/overrides/org.videolan.VLC"
 )
 
 usage() {
@@ -58,12 +61,12 @@ case "$(uname -s)" in
   *) echo "Unsupported platform: $(uname -s)"; exit 1 ;;
 esac
 
-# Include COSMIC desktop configs on Linux if present (excluding personal wallpaper paths)
+# Include COSMIC desktop configs on Linux if present (excluding personal wallpaper & file paths)
 if [[ "$PLATFORM" == "linux" && -d "${HOME_DIR}/.config/cosmic" ]]; then
   while IFS= read -r file; do
     rel="${file#${HOME_DIR}/}"
     FILES+=("$rel")
-  done < <(find "${HOME_DIR}/.config/cosmic" -type f ! -path "*/com.system76.CosmicBackground/*" ! -path "*/com.system76.CosmicSettings.Wallpaper/*" 2>/dev/null || true)
+  done < <(find "${HOME_DIR}/.config/cosmic" -type f ! -path "*/com.system76.CosmicBackground/*" ! -path "*/com.system76.CosmicSettings.Wallpaper/*" ! -path "*/com.system76.CosmicFiles/*" 2>/dev/null || true)
 fi
 
 for f in "${FILES[@]}"; do

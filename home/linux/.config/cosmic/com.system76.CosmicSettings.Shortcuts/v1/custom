@@ -1,3 +1,21 @@
 {
-    (modifiers: [Super], key: "v", description: Some("Clipboard History")): Spawn("cosmic-clipboard"),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "v",
+        description: Some("Clipboard History"),
+    ): Spawn("cosmic-clipboard"),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "e",
+    ): System(HomeFolder),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "f",
+    ): Disable,
 }

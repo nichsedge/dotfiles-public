@@ -1,0 +1,6 @@
+[Context]
+sockets=wayland;
+
+[Environment]
+XCURSOR_SIZE=24
+XCURSOR_THEME=MacTahoe-cursors

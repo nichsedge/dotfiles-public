@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
-# cosmic-clipboard: Raycast / Windows-style lightweight clipboard history
+# cosmic-clipboard: Ultra-fast toggle via direct 2ms D-Bus IPC with native fallback
 set -euo pipefail
 
-# Ensure cliphist daemon is active
-if ! pgrep -f "wl-paste.*cliphist" >/dev/null 2>&1; then
-    systemctl --user start cliphist.service 2>/dev/null || (wl-paste --watch cliphist store &)
+# 1. Fast-path: Instant 2ms D-Bus toggle if resident
+if gdbus call --session \
+              --dest dev.nichsedge.cosmic.clipboard \
+              --object-path /dev/nichsedge/cosmic/clipboard \
+              --method org.gtk.Application.Activate "{}" >/dev/null 2>&1; then
+    exit 0
 fi
 
-selected=$(cliphist list | wofi --dmenu --prompt "Clipboard…" --lines 10 --width 650)
-if [[ -n "${selected:-}" ]]; then
-    printf "%s" "$selected" | cliphist decode | wl-copy
-    # Brief pause to allow wofi to close and focus to return to previous window
-    sleep 0.12
-    wtype -M ctrl -k v -m ctrl 2>/dev/null || true
-fi
+# 2. Fallback: Launch resident binary
+exec "${HOME}/Projects/cosmic-clipboard/target/release/cosmic-clipboard" "$@"
