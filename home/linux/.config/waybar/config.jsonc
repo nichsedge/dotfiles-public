@@ -1,0 +1,129 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 38,
+  "margin-top": 6,
+  "margin-left": 10,
+  "margin-right": 10,
+  "spacing": 6,
+
+  "modules-left": [
+    "custom/logo",
+    "niri/workspaces",
+    "niri/window"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "pulseaudio",
+    "network",
+    "cpu",
+    "memory",
+    "tray",
+    "custom/notification"
+  ],
+
+  "custom/logo": {
+    "format": "󰣛",
+    "tooltip": false,
+    "on-click": "fuzzel"
+  },
+
+  "niri/workspaces": {
+    "format": "{icon}",
+    "format-icons": {
+      "active": "󰮯",
+      "focused": "󰮯",
+      "default": "󰊠"
+    }
+  },
+
+  "niri/window": {
+    "format": "{title}",
+    "max-length": 50,
+    "icon": true,
+    "icon-size": 18,
+    "rewrite": {
+      "(.*) — Mozilla Firefox": "󰈹 $1",
+      "(.*) - Google Chrome": " $1",
+      "ghostty": "󰞷 Ghostty",
+      "nvim (.*)": " $1"
+    }
+  },
+
+  "clock": {
+    "format": "󰅐 {:%H:%M}",
+    "format-alt": "󰸗 {:%A, %B %d, %Y (%H:%M)}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      "weeks-pos": "right",
+      "on-scroll": 1,
+      "format": {
+        "months": "<b>{}</b>",
+        "days": "<b>{}</b>",
+        "weeks": "<b>W{}</b>",
+        "weekdays": "<b>{}</b>",
+        "today": "<b><u>{}</u></b>"
+      }
+    }
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 Muted",
+    "format-icons": {
+      "default": ["󰕿", "󰖀", "󰕾"]
+    },
+    "scroll-step": 5,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "pavucontrol"
+  },
+
+  "network": {
+    "format-wifi": "󰤨 {essid}",
+    "format-ethernet": "󰈀 {ipaddr}",
+    "format-linked": "󰈀 {ifname} (No IP)",
+    "format-disconnected": "󰤭 Offline",
+    "tooltip-format": "{ifname}: {ipaddr}/{cidr} via {gwaddr}",
+    "on-click": "ghostty -e nmtui"
+  },
+
+  "cpu": {
+    "format": "󰍛 {usage}%",
+    "interval": 2
+  },
+
+  "memory": {
+    "format": "󰘚 {percentage}%",
+    "interval": 2
+  },
+
+  "tray": {
+    "icon-size": 18,
+    "spacing": 10
+  },
+
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂚",
+      "dnd-notification": "󰂛",
+      "dnd-none": "󰂛",
+      "inhibited-notification": "󱅫",
+      "inhibited-none": "󰂚",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰂛"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  }
+}

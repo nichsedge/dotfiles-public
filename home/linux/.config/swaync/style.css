@@ -1,0 +1,114 @@
+@import "colors.css";
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", sans-serif;
+  font-weight: 500;
+}
+
+.control-center {
+  background-color: @cc-bg;
+  border: 1px solid @border-color;
+  border-radius: 14px;
+  padding: 14px;
+  color: @text-color;
+}
+
+.control-center .widget-title {
+  color: @text-color;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.control-center .widget-title button {
+  background-color: @noti-bg;
+  border-radius: 8px;
+  color: @text-color;
+  padding: 4px 8px;
+}
+
+.control-center .widget-title button:hover {
+  background-color: @noti-bg-hover;
+}
+
+.widget-dnd {
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.widget-dnd switch {
+  background-color: @noti-bg;
+  border-radius: 12px;
+}
+
+.widget-dnd switch:checked {
+  background-color: @bg-selected;
+}
+
+.widget-volume {
+  background-color: @noti-bg;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+
+.widget-volume trough highlight {
+  background-color: @bg-selected;
+  border-radius: 6px;
+}
+
+.widget-mpris {
+  background-color: @noti-bg;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.widget-buttons-grid {
+  margin-bottom: 12px;
+}
+
+.widget-buttons-grid button {
+  background-color: @noti-bg;
+  border: 1px solid @border-color;
+  border-radius: 10px;
+  color: @text-color;
+  padding: 8px 12px;
+  margin: 3px;
+  font-weight: 600;
+}
+
+.widget-buttons-grid button:hover {
+  background-color: @bg-selected;
+  color: @text-selected;
+}
+
+.notification-row {
+  outline: none;
+  margin-bottom: 6px;
+}
+
+.notification {
+  background-color: @noti-bg;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.notification:hover {
+  background-color: @noti-bg-hover;
+}
+
+.notification-content {
+  color: @text-color;
+}
+
+.close-button {
+  background-color: @noti-close-bg;
+  border-radius: 100%;
+  color: @text-color;
+}
+
+.close-button:hover {
+  background-color: @noti-close-bg-hover;
+}

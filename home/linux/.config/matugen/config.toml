@@ -1,0 +1,18 @@
+[config]
+reload_apps = false
+
+[templates.niri]
+input_path = "/home/al/.config/matugen/templates/colors.kdl"
+output_path = "/home/al/.config/niri/colors.kdl"
+
+[templates.waybar]
+input_path = "/home/al/.config/matugen/templates/waybar-colors.css"
+output_path = "/home/al/.config/waybar/colors.css"
+
+[templates.swaync]
+input_path = "/home/al/.config/matugen/templates/swaync-colors.css"
+output_path = "/home/al/.config/swaync/colors.css"
+
+[templates.fuzzel]
+input_path = "/home/al/.config/matugen/templates/fuzzel-colors.ini"
+output_path = "/home/al/.config/fuzzel/colors.ini"
