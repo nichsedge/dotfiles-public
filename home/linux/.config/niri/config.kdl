@@ -1,5 +1,8 @@
-// Dynamic Matugen Colors (Generated from wallpaper)
-include "colors.kdl"
+// DMS (Dank Material Shell) Dynamic Configuration
+include "dms/colors.kdl"
+include "dms/layout.kdl"
+include "dms/wpblur.kdl"
+include "dms/alttab.kdl"
 
 // This config is in the KDL format: https://kdl.dev
 // "/-" comments out the following node.
@@ -275,10 +278,6 @@ layout {
 // See the binds section below for more spawn examples.
 
 spawn-at-startup "sh" "-c" "hypridle -c ~/.config/niri/hypridle.conf"
-spawn-at-startup "waybar"
-spawn-at-startup "swaync"
-spawn-at-startup "swaybg" "-i" "/home/al/.config/background" "-m" "fill"
-spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -382,7 +381,7 @@ window-rule {
 
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
-window-rule {
+/-window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
 }
@@ -397,14 +396,14 @@ binds {
     // =========================================================================
     // 1. APPLICATION LAUNCHERS & SYSTEM UTILITIES
     // =========================================================================
-    Mod+Space hotkey-overlay-title="App Launcher (Fuzzel)" { spawn "fuzzel"; }
-    Mod+D hotkey-overlay-title=null { spawn "fuzzel"; }
+    Mod+Space hotkey-overlay-title="App Launcher (DMS)" { spawn "dms" "ipc" "call" "launcher" "toggle"; }
+    Mod+D hotkey-overlay-title=null { spawn "dms" "ipc" "call" "launcher" "toggle"; }
     Mod+Return hotkey-overlay-title="Terminal (Ghostty)" { spawn "ghostty" "--window-decoration=false"; }
     Mod+T hotkey-overlay-title=null { spawn "ghostty" "--window-decoration=false"; }
     Mod+B hotkey-overlay-title="Web Browser (Chrome)" { spawn "google-chrome-stable"; }
     Mod+E hotkey-overlay-title="File Manager (Nautilus)" { spawn "nautilus" "--new-window"; }
     Mod+V hotkey-overlay-title="Clipboard History" { spawn "cosmic-clipboard"; }
-    Mod+N hotkey-overlay-title="Control Center (SwayNC)" { spawn "swaync-client" "-t" "-sw"; }
+    Mod+N hotkey-overlay-title="Control Center (DMS)" { spawn "dms" "ipc" "call" "control-center" "toggle"; }
     Mod+Shift+T hotkey-overlay-title="Tailscale VPN Menu" { spawn-sh "~/.config/scripts/tailscale-menu.sh"; }
 
     // =========================================================================
@@ -573,8 +572,8 @@ binds {
     // =========================================================================
     // 7. SYSTEM, POWER & SESSION
     // =========================================================================
-    Super+Alt+L hotkey-overlay-title="Lock Screen (hyprlock)" { spawn "hyprlock"; }
-    Mod+Shift+Q hotkey-overlay-title="Session and Power Menu" { spawn-sh "~/.config/scripts/powermenu.sh"; }
+    Super+Alt+L hotkey-overlay-title="Lock Screen" { spawn "dms" "ipc" "call" "lock" "lock"; }
+    Mod+Shift+Q hotkey-overlay-title="Session and Power Menu" { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
     Mod+Shift+P hotkey-overlay-title="Power Off Monitors" { power-off-monitors; }
     Mod+Shift+E hotkey-overlay-title="Quit Niri" { quit; }
     Ctrl+Alt+Delete hotkey-overlay-title=null { quit; }

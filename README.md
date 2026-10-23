@@ -57,7 +57,7 @@ Skip package installs when the OS is already prepared:
 
 Platform-specific extras (Linux desktop):
 - **COSMIC Desktop**: `.config/cosmic/` (keyboard repeat delay 250ms & rate 33/s in `com.system76.CosmicComp/v1/xkb_config`, dark theme, panel, dock).
-- **Niri Compositor & Shell**: `.config/niri/config.kdl`, `hypridle.conf`, `colors.kdl`, Waybar (`.config/waybar/`), SwayNC (`.config/swaync/`), Fuzzel (`.config/fuzzel/`), and Matugen dynamic theming (`.config/matugen/`).
+- **Niri Compositor & DMS**: `.config/niri/config.kdl`, `hypridle.conf`, and modular `dms/*.kdl`.
 - **Desktop Helpers**: `.config/scripts/tailscale-menu.sh`, `tailscale-toggle.sh`, `.local/bin/toggle-gnome-overview`, `.local/bin/ghostty-tab`.
 - **GNOME Synchronization**: `scripts/desktop/gnome/set-config.sh` (standardizes GNOME 1:1 with Niri/Mac).
 - **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `.local/bin/update-antigravity`.
