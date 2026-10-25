@@ -7,20 +7,8 @@ shell=org.kde.plasma.desktop
 [PlasmaViews][Panel 107][Defaults]
 thickness=60
 
-[PlasmaViews][Panel 62]
-floating=0
-shell=org.kde.plasma.desktop
-
-[PlasmaViews][Panel 81]
-floating=1
-panelLengthMode=1
-shell=org.kde.plasma.desktop
-
-[PlasmaViews][Panel 81][Defaults]
-thickness=56
-
 [PlasmaViews][Panel 89]
-floating=1
+floating=0
 shell=org.kde.plasma.desktop
 
 [PlasmaViews][Panel 89][Defaults]

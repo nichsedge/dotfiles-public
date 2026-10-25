@@ -282,8 +282,6 @@ _launch=Alt+Space\tMeta+Space\tMeta+D
 
 [services][org.kde.spectacle.desktop]
 ActiveWindowScreenShot=Meta+%\tMeta+Print\tMeta+Shift+%\tMeta+Shift+5
-CurrentMonitorScreenShot=none
 FullScreenScreenShot=Shift+Print\tMeta+#\tMeta+Shift+#\tMeta+Shift+3
-OpenWithoutScreenshot=none
 RectangularRegionScreenShot=Meta+$\tMeta+Shift+$\tMeta+Shift+4\tMeta+Shift+S\tMeta+Shift+Print
 _launch=Print
