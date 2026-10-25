@@ -8,10 +8,27 @@ Id_1=0c470968-c206-45bc-b7b4-6b6490adaddb
 Number=1
 Rows=1
 
+[Effect-blur]
+BlurStrength=12
+NoiseStrength=4
+
+[Effect-diminactive]
+DimStrength=15
+
 [Keyboard]
 KeyRepeat=repeat
 RepeatDelay=250
 RepeatRate=33.33
+
+[Plugins]
+blurEnabled=true
+contrastEnabled=true
+diminactiveEnabled=true
+slideEnabled=true
+
+[TabBox]
+LayoutName=big_icons
+ShowDesktop=false
 
 [Tiling][0c470968-c206-45bc-b7b4-6b6490adaddb][7ac7d716-224e-47d7-bba1-be031c1d674d]
 padding=4
@@ -31,3 +48,8 @@ tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"wi
 
 [Xwayland]
 Scale=1
+
+[org.kde.kdecoration2]
+BorderSize=None
+ButtonsOnLeft=XIA
+ButtonsOnRight=

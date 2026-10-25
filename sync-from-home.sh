@@ -29,6 +29,8 @@ FILES=(
   ".config/kwinrc"
   ".config/kglobalshortcutsrc"
   ".config/kdeglobals"
+  ".config/krunnerrc"
+  ".config/plasmashellrc"
   ".config/environment.d/cursor.conf"
   ".local/share/applications/hotkey-cheatsheet.desktop"
   ".local/share/applications/tailscale-menu.desktop"
