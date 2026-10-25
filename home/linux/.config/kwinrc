@@ -17,5 +17,17 @@ RepeatRate=33.33
 padding=4
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
+[Tiling][79886f89-4ba1-4cb9-b278-08f338abdf96][7ac7d716-224e-47d7-bba1-be031c1d674d]
+padding=4
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][8418004d-2f48-4319-ab5f-1b3b6ef0daa4][7ac7d716-224e-47d7-bba1-be031c1d674d]
+padding=4
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][904b6c7e-8565-44b6-935e-9d11801d0956][7ac7d716-224e-47d7-bba1-be031c1d674d]
+padding=4
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
 [Xwayland]
 Scale=1

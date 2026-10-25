@@ -3,8 +3,12 @@ KeyRepeat=repeat
 RepeatDelay=250
 RepeatRate=33.33
 
+[Libinput][1267][12541][ELAN071A:00 04F3:30FD Touchpad]
+NaturalScroll=true
+
 [Mouse]
 cursorSize=24
+cursorTheme=MacTahoe-cursors
 
 [Touchpad]
 naturalScroll=true

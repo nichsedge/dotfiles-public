@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hotkey Cheatsheet
+Comment=Interactive Categorized Hotkey Cheatsheet
+Exec=hotkey-cheatsheet
+Icon=preferences-desktop-keyboard-shortcuts
+Terminal=false
+Categories=Utility;
+StartupNotify=false
+X-KDE-Shortcuts=Meta+/

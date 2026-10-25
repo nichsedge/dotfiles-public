@@ -127,7 +127,7 @@ Window Fullscreen=none,none,Make Window Fullscreen
 Window Grow Horizontal=none,none,Expand Window Horizontally
 Window Grow Vertical=none,none,Expand Window Vertically
 Window Lower=none,none,Lower Window
-Window Maximize=Meta+PgUp,Meta+PgUp,Maximize Window
+Window Maximize=Meta+F,Meta+PgUp,Maximize Window
 Window Maximize Horizontal=none,none,Maximize Window Horizontally
 Window Maximize Vertical=none,none,Maximize Window Vertically
 Window Minimize=Meta+PgDown,Meta+PgDown,Minimize Window
@@ -272,3 +272,17 @@ _launch=Meta+T\tMeta+Return
 
 [services][google-chrome.desktop]
 _launch=Meta+B
+
+[services][org.gnome.Nautilus.desktop]
+_launch=Meta+E
+
+[services][org.kde.krunner.desktop]
+_launch=Alt+Space\tMeta+Space\tMeta+D
+
+[services][org.kde.spectacle.desktop]
+ActiveWindowScreenShot=Meta+%\tMeta+Print\tMeta+Shift+%\tMeta+Shift+5
+CurrentMonitorScreenShot=none
+FullScreenScreenShot=Shift+Print\tMeta+#\tMeta+Shift+#\tMeta+Shift+3
+OpenWithoutScreenshot=none
+RectangularRegionScreenShot=Meta+$\tMeta+Shift+$\tMeta+Shift+4\tMeta+Shift+S\tMeta+Shift+Print
+_launch=Print

@@ -1,0 +1,12 @@
+ark
+bluedevil
+flatpak-kcm
+kde-connect
+kde-gtk-config
+kdeplasma-addons
+kdialog
+kio-admin
+ksshaskpass
+pinentry-qt
+plasma-systemmonitor
+spectacle

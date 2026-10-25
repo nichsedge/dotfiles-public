@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Tailscale Menu
+GenericName=Tailscale Manager
+Comment=Interactive Tailscale status, toggle, peers, and network manager
+Exec=tailscale-menu
+Icon=network-vpn
+Terminal=false
+Categories=Network;
+Keywords=tailscale;vpn;menu;peers;status;network;wireguard;ts;
+StartupNotify=false
+X-KDE-Shortcuts=Meta+Shift+T
