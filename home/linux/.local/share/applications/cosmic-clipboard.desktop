@@ -9,3 +9,4 @@ Exec=cosmic-clipboard
 Icon=edit-paste-symbolic
 StartupWMClass=dev.nichsedge.cosmic.clipboard
 Categories=Utility;
+NotShowIn=KDE;

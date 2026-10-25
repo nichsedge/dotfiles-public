@@ -28,7 +28,7 @@ diminactiveEnabled=true
 slideEnabled=true
 
 [TabBox]
-LayoutName=big_icons
+LayoutName=thumbnail_grid
 ShowDesktop=false
 
 [Tiling][0c470968-c206-45bc-b7b4-6b6490adaddb][7ac7d716-224e-47d7-bba1-be031c1d674d]
