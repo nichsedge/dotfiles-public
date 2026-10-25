@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Enforce consistent basic password store across all desktop environments
+# (GNOME, KDE Plasma, Niri, COSMIC) to prevent session cookie invalidation.
+for arg in "$@"; do
+  case "$arg" in
+    --password-store=*) exec /usr/bin/google-chrome-stable "$@" ;;
+  esac
+done
+
+exec /usr/bin/google-chrome-stable --password-store=basic "$@"
