@@ -56,7 +56,5 @@ Scale=1
 
 [org.kde.kdecoration2]
 BorderSize=None
-ButtonsOnLeft=XIA
-ButtonsOnRight=
-library=org.kde.kwin.aurorae
-theme=__aurorae__svg__MacTahoe-Dark
+ButtonsOnLeft=M
+ButtonsOnRight=IAX

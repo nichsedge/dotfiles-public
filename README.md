@@ -60,7 +60,7 @@ Platform-specific extras (Linux desktop):
 - **Niri Compositor & DMS**: `.config/niri/config.kdl`, `hypridle.conf`, and modular `dms/*.kdl`.
 - **Desktop Helpers**: `.config/scripts/tailscale-menu.sh`, `tailscale-toggle.sh`, `.local/bin/toggle-gnome-overview`, `.local/bin/ghostty-tab`.
 - **GNOME Synchronization**: `scripts/desktop/gnome/set-config.sh` (standardizes GNOME 1:1 with Niri/Mac).
-- **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `.local/bin/update-antigravity`, `.local/bin/google-chrome-stable` (forces persistent `--password-store=basic` across GNOME, KDE Plasma, Niri, and COSMIC), `.local/bin/dock-apps` (CLI helper to manage pinned KDE Plasma dock launchers).
+- **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `.local/bin/update-antigravity`, `.local/bin/google-chrome-stable` (forces persistent `--password-store=basic` across GNOME, KDE Plasma, Niri, and COSMIC).
 
 Private files are created if missing and are never committed:
 
