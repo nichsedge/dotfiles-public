@@ -1,0 +1,12 @@
+[Keyboard]
+KeyRepeat=repeat
+RepeatDelay=250
+RepeatRate=33.33
+
+[Mouse]
+cursorSize=24
+cursorTheme=MacTahoe-cursors
+
+[Touchpad]
+naturalScroll=true
+tapToClick=true
