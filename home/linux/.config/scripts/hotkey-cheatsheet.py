@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Interactive Categorized Hotkey Cheatsheet for Workstation (Niri & GNOME)
+Interactive Categorized Hotkey Cheatsheet for Workstation (KDE Plasma 6 Wayland)
 Built with GTK4 & Libadwaita. Supports live search, categorized cards,
 keyboard navigation, and instant toggle with Escape / Super+/.
 """
@@ -19,78 +19,60 @@ CATEGORIES = [
         "name": "🚀 Applications & Launchers",
         "description": "Quick system entry points",
         "items": [
-            ("App Launcher (DMS)", ["Super", "Space"]),
             ("Terminal (Ghostty)", ["Super", "Return"]),
-            ("Web Browser (Chrome)", ["Super", "B"]),
-            ("File Manager (Nautilus)", ["Super", "E"]),
+            ("KRunner / Spotlight", ["Alt", "Space", "or", "Super", "Space"]),
+            ("Application Menu", ["Super"]),
             ("Clipboard History", ["Super", "V"]),
-            ("Control Center", ["Super", "N"]),
-            ("Tailscale VPN Menu", ["Super", "Shift", "T"]),
+            ("Hotkey Cheatsheet (This)", ["Super", "/"]),
         ]
     },
     {
-        "name": "🪟 Window Focus & 2D Grid",
-        "description": "Spatial navigation across columns and rows",
+        "name": "🪟 Windows & Tiling Management",
+        "description": "Window positioning and KWin quick-tiling",
         "items": [
-            ("Focus Column Left / Right", ["Super", "Left / Right"]),
-            ("Focus Window Up / Down (in column)", ["Super", "Up / Down"]),
-            ("Move Column Left / Right", ["Super", "Ctrl", "Left / Right"]),
-            ("Move Window Up / Down (in column)", ["Super", "Ctrl", "Up / Down"]),
-            ("Focus First / Last Column", ["Super", "Home / End"]),
-            ("Switch Windows (Universal Alt-Tab)", ["Alt", "Tab"]),
-            ("Switch Windows of Same App", ["Super", "`"]),
+            ("Close Active Window", ["Alt", "F4", "or", "Ctrl", "Q"]),
+            ("Maximize Window", ["Super", "Up", "or", "Super", "F"]),
+            ("Minimize Window", ["Super", "Down"]),
+            ("Quick Tile Left / Right", ["Super", "Left / Right"]),
+            ("Quick Tile to Corner Quarters", ["Super", "Up/Down", "Left/Right"]),
+            ("Toggle KWin Tiles Editor", ["Super", "T"]),
+            ("Switch Windows (Alt-Tab)", ["Alt", "Tab"]),
         ]
     },
     {
-        "name": "📐 Window Sizing & Layout Modes",
-        "description": "Tiling ribbon, tabs, and dimensions",
+        "name": "🧭 Workspaces & Gestures",
+        "description": "Virtual desktops and 1:1 Wayland touch gestures",
         "items": [
-            ("Close Active Window", ["Super", "Q", "or", "Alt", "F4"]),
-            ("Maximize Column", ["Super", "F"]),
-            ("Fullscreen Window", ["Super", "Shift", "F"]),
-            ("Maximize to Edges", ["Super", "M"]),
-            ("Center Focused Column", ["Super", "C"]),
-            ("Cycle Preset Width", ["Super", "R"]),
-            ("Adjust Width (±10%)", ["Super", "- / ="]),
-            ("Toggle Window Floating", ["Super", "Shift", "V"]),
-            ("Toggle Column Tabbed Mode", ["Super", "W"]),
-            ("Consume / Expel Window", ["Super", "[ / ]"]),
-        ]
-    },
-    {
-        "name": "🧭 Workspaces & Monitors",
-        "description": "Multi-desktop and display routing",
-        "items": [
-            ("Workspace Overview", ["Super", "O"]),
-            ("Jump to Workspace (1-9)", ["Super", "1 .. 9"]),
-            ("Move Column to Workspace (1-9)", ["Super", "Ctrl", "1 .. 9"]),
-            ("Next / Prev Workspace", ["Super", "Page Down / Up"]),
-            ("Focus Monitor Left / Right", ["Super", "Shift", "Left / Right"]),
-            ("Move Column to Monitor", ["Super", "Shift", "Ctrl", "Left / Right"]),
+            ("Switch Workspace (1-4)", ["3/4-Finger", "Swipe", "Left / Right"]),
+            ("Overview (All Desktops)", ["4-Finger", "Swipe", "Up"]),
+            ("Desktop Grid View", ["4-Finger", "Swipe", "Down"]),
+            ("Toggle Overview Mode", ["Super", "W"]),
+            ("Toggle Grid View", ["Super", "G"]),
+            ("Direct Jump to Desktop (1..4)", ["Ctrl", "F1 .. F4"]),
+            ("Peek at Desktop", ["Super", "D"]),
         ]
     },
     {
         "name": "📸 Screenshots & Media",
-        "description": "Universal 3/4/5 capture mapping",
+        "description": "Screen capture and media controls",
         "items": [
-            ("Screenshot: Entire Screen", ["Super", "Shift", "3"]),
-            ("Screenshot: Selection Area", ["Super", "Shift", "4"]),
-            ("Screenshot: Active Window", ["Super", "Shift", "5"]),
-            ("Audio Volume (±10%)", ["Volume Up / Down"]),
+            ("Screenshot (Spectacle GUI)", ["Print", "or", "Super", "Shift", "S"]),
+            ("Capture Full Screen", ["Shift", "Print"]),
+            ("Capture Active Window", ["Super", "Print"]),
+            ("Audio Volume (±5%)", ["Volume Up / Down"]),
             ("Mute Output / Mic", ["Mute / Mic Mute"]),
             ("Media Play / Pause / Skip", ["Media Play / Prev / Next"]),
         ]
     },
     {
         "name": "🔒 System & Session",
-        "description": "Lock, power, and compositor controls",
+        "description": "Lock, logout, and display control",
         "items": [
-            ("Lock Screen (DMS)", ["Super", "Alt", "L"]),
-            ("Power & Session Menu (DMS)", ["Super", "Shift", "Q"]),
-            ("Power Off Monitors", ["Super", "Shift", "P"]),
-            ("Quit Niri Compositor", ["Super", "Shift", "E"]),
-            ("Toggle Shortcuts Inhibit", ["Super", "Escape"]),
-            ("Toggle This Cheatsheet", ["Super", "/"]),
+            ("Lock Screen", ["Super", "L"]),
+            ("Logout / Power Dialog", ["Ctrl", "Alt", "Del"]),
+            ("System Settings", ["System", "Settings"]),
+            ("Toggle Cheatsheet Overlay", ["Super", "/"]),
+            ("Dismiss Overlay", ["Esc"]),
         ]
     },
 ]
