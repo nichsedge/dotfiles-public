@@ -315,3 +315,6 @@ alias agyy="agy yolo"
 # Local Shell Overrides
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
+
+# Turso Database CLI
+export PATH="$PATH:$HOME/.turso"
