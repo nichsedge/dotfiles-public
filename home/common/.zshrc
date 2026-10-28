@@ -156,6 +156,7 @@ alias repos-wip="repos-status -W"
 alias repos-load="repos-status -L"
 alias repos-clean="repos-status --clean-wip"
 alias check-deps="check-dependencies"
+alias portfolio="ierp portfolio"
 alias ts="tailscale"
 alias ts-toggle="$HOME/.config/scripts/tailscale-toggle.sh"
 alias ts-menu="$HOME/.config/scripts/tailscale-menu.sh"
@@ -163,14 +164,12 @@ alias ts-menu="$HOME/.config/scripts/tailscale-menu.sh"
 # Multi-Device Workstation Pre-Flight & Post-Flight Discipline
 preflight() {
   echo "🚀 Running Workstation Pre-Flight Routine..."
-  event pull
   repos-status -p
   echo "✓ Pre-flight complete. Ready to build."
 }
 
 postflight() {
   echo "🛫 Running Workstation Post-Flight Routine..."
-  event push
   repos-status -P
   repos-status -d
   echo "✓ Post-flight complete. (Tip: Use 'repos-wip' to snapshot dirty trees to shadow branch if switching devices)."
@@ -227,22 +226,18 @@ EOF
   fi
 }
 
-# iERP Event Logging and CRM Helper
+# iERP Event Logging and Unified CLI Helper
 event() {
   if [[ $# -eq 0 ]]; then
     ierp list --limit 10
   elif [[ "$1" == "add" ]]; then
     shift
     ierp insert "$@"
-  elif [[ "$1" == "sync" ]]; then
+  elif [[ "$1" == "runway" ]]; then
+    ierp runway
+  elif [[ "$1" == "portfolio" ]]; then
     shift
-    ierp r2 auto "$@"
-  elif [[ "$1" == "push" ]]; then
-    shift
-    ierp r2 push "$@"
-  elif [[ "$1" == "pull" ]]; then
-    shift
-    ierp r2 pull "$@"
+    ierp portfolio "$@"
   else
     ierp "$@"
   fi
