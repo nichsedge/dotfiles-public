@@ -2,13 +2,13 @@
 
 Public, secret-free bootstrap repo for my workstation defaults. The public repo is the first layer for a new device; private credentials and machine-specific workflow shortcuts are layered later from `~/Projects/dotfiles-private`.
 
-## First Install: Fedora GNOME
+## First Install: Fedora KDE (Plasma 6)
 
 ```bash
 mkdir -p ~/Projects
 git clone https://github.com/nichsedge/dotfiles-public.git ~/Projects/dotfiles-public
 cd ~/Projects/dotfiles-public
-./bootstrap.sh --profile fedora-gnome
+./bootstrap.sh --profile fedora-kde
 ```
 
 ## First Install: Mobile / Headless (Native Termux Android)
@@ -29,7 +29,7 @@ cd ~/Projects/dotfiles-public
 Preview without changing the machine:
 
 ```bash
-./bootstrap.sh --profile fedora-gnome --dry-run
+./bootstrap.sh --profile fedora-kde --dry-run
 ./install.sh --dry-run
 # Or on mobile:
 ./bootstrap.sh --profile mobile --dry-run
@@ -39,7 +39,7 @@ Preview without changing the machine:
 Skip package installs when the OS is already prepared:
 
 ```bash
-./bootstrap.sh --profile fedora-gnome --no-packages
+./bootstrap.sh --profile fedora-kde --no-packages
 ```
 
 ## Managed Files
@@ -56,11 +56,11 @@ Skip package installs when the OS is already prepared:
 - `.config/ghostty/themes/dankcolors`
 
 Platform-specific extras (Linux desktop):
+- **KDE Plasma 6 (Wayland)**: `.config/kwinrc`, `.config/kcminputrc`, `.config/kglobalshortcutsrc`, `.config/kdeglobals`, `.config/krunnerrc`, `.config/plasmashellrc`.
 - **COSMIC Desktop**: `.config/cosmic/` (keyboard repeat delay 250ms & rate 33/s in `com.system76.CosmicComp/v1/xkb_config`, dark theme, panel, dock).
-- **Niri Compositor & DMS**: `.config/niri/config.kdl`, `hypridle.conf`, and modular `dms/*.kdl`.
-- **Desktop Helpers**: `.config/scripts/tailscale-menu.sh`, `tailscale-toggle.sh`, `.local/bin/toggle-gnome-overview`, `.local/bin/ghostty-tab`.
-- **GNOME Synchronization**: `scripts/desktop/gnome/set-config.sh` (standardizes GNOME 1:1 with Niri/Mac).
-- **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `.local/bin/update-antigravity`, `.local/bin/google-chrome-stable` (forces persistent `--password-store=basic` across GNOME, KDE Plasma, Niri, and COSMIC).
+- **Desktop Helpers**: `.config/scripts/tailscale-menu.sh`, `tailscale-toggle.sh`, `.config/scripts/hotkey-cheatsheet.py`, `.local/bin/ghostty-tab`.
+- **Launchers & Automation**: `.local/share/applications/*.desktop`, `Projects/sync_git_repos.sh`, `.local/bin/update-antigravity`, `.local/bin/google-chrome-stable` (forces persistent `--password-store=basic`).
+- **Archive**: `archive/` preserves historical configs for GNOME, Niri, and Hyprland/Waybar.
 
 Private files are created if missing and are never committed:
 

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROFILE="fedora-gnome"
+PROFILE="fedora-kde"
 if [[ -d "/data/data/com.termux" ]] || [[ -n "${TERMUX_VERSION:-}" ]]; then
   PROFILE="mobile"
 fi
@@ -11,12 +11,12 @@ DRY_RUN=false
 
 usage() {
   cat <<'USAGE'
-Usage: ./bootstrap.sh [--profile fedora-gnome|minimal|mobile] [--no-packages] [--dry-run]
+Usage: ./bootstrap.sh [--profile fedora-kde|minimal|mobile] [--no-packages] [--dry-run]
 
 Bootstraps a new machine using this public dotfiles repo.
 
 Options:
-  --profile NAME  Install profile: fedora-gnome, minimal, or mobile (Native Termux/headless). Default: fedora-gnome
+  --profile NAME  Install profile: fedora-kde, minimal, or mobile (Native Termux/headless). Default: fedora-kde
   --no-packages   Skip package and external tool installation
   --dry-run       Print actions without changing files
 USAGE
@@ -65,11 +65,10 @@ install_fedora_packages() {
   fi
   run sudo dnf upgrade -y
   run sudo dnf copr enable -y scottames/ghostty
-  if [[ -f "$DOTFILES_DIR/packages/fedora-gnome.txt" ]]; then
-    log "Installing Fedora packages from packages/fedora-gnome.txt"
-    run sudo dnf install -y $(grep -v '^#' "$DOTFILES_DIR/packages/fedora-gnome.txt" | grep -v '^$' | tr '\n' ' ')
-  else
-    run sudo dnf install -y git curl wget zsh tmux ripgrep fzf fd-find bat eza starship zoxide lazygit git-delta direnv htop btop fastfetch tldr glow jq unzip util-linux-user gcc gcc-c++ make cmake python3-devel libffi-devel gh ghostty gnome-tweaks gnome-extensions-app dconf-editor jetbrainsmono-nerd-fonts flatpak fuse fuse-libs ntfs-3g vlc firefox
+  run sudo dnf install -y git curl wget zsh tmux ripgrep fzf fd-find bat eza starship zoxide lazygit git-delta direnv htop btop fastfetch tldr glow jq unzip util-linux-user gcc gcc-c++ make cmake python3-devel libffi-devel gh ghostty jetbrainsmono-nerd-fonts flatpak fuse fuse-libs ntfs-3g vlc firefox
+  if [[ -f "$DOTFILES_DIR/packages/fedora-kde.txt" ]]; then
+    log "Installing Fedora KDE packages from packages/fedora-kde.txt"
+    run sudo dnf install -y $(grep -v '^#' "$DOTFILES_DIR/packages/fedora-kde.txt" | grep -v '^$' | tr '\n' ' ')
   fi
   run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
   if [[ -f "$DOTFILES_DIR/packages/flatpaks.txt" ]]; then
@@ -232,7 +231,7 @@ EOF
 }
 
 case "$PROFILE" in
-  fedora-gnome|minimal|mobile) ;;
+  fedora-kde|fedora-gnome|minimal|mobile) ;;
   *) log "Unsupported profile: $PROFILE"; usage; exit 1 ;;
 esac
 
@@ -240,7 +239,7 @@ log "Bootstrapping ${PROFILE} from ${DOTFILES_DIR}"
 
 if [[ "$INSTALL_PACKAGES" == true ]]; then
   case "$PROFILE" in
-    fedora-gnome) install_fedora_packages ;;
+    fedora-kde|fedora-gnome) install_fedora_packages ;;
     minimal) install_minimal_packages ;;
     mobile) install_mobile_packages ;;
   esac
