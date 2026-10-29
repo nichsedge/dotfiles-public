@@ -15,6 +15,7 @@
 [core]
 	pager = delta
 	autocrlf = input
+	hooksPath = /home/al/.config/git/hooks
 [interactive]
 	diffFilter = delta --color-only
 [delta]
