@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Update Android Apps
+Comment=Build and install latest updates of all Android projects to connected ADB device
+Exec=ghostty --title="Android Projects Updater" -e bash -c "update-android-apps; echo; read -n 1 -s -r -p 'Press any key to close...'"
+Icon=android-studio
+Categories=Development;Utility;
+Terminal=false
+StartupNotify=true

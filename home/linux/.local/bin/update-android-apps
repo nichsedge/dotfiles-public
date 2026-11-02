@@ -1,0 +1,352 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# update-android-apps: One-click build & install updater for Android projects
+# Targets all local Android apps and installs updates over ADB.
+# ==============================================================================
+
+set -eo pipefail
+
+# Environment setup
+export ANDROID_HOME="${ANDROID_HOME:-/home/al/Android/Sdk}"
+export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-/home/al/Android/Sdk}"
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+# Terminal formatting
+BOLD="\033[1m"
+GREEN="\033[1;32m"
+BLUE="\033[1;34m"
+YELLOW="\033[1;33m"
+RED="\033[1;31m"
+CYAN="\033[1;36m"
+GRAY="\033[0;90m"
+NC="\033[0m"
+
+# Project definitions: "Name|Directory|PackageId|DebugApkPath|ReleaseApkPath"
+PROJECTS=(
+    "Sans Launcher|/home/al/Projects/sanslauncher|com.sans.launcher|app/build/outputs/apk/debug/app-debug.apk|app/build/outputs/apk/release/app-release.apk"
+    "Sans Finance|/home/al/Projects/sansfinance|com.sans.finance|app/build/outputs/apk/debug/app-debug.apk|app/build/outputs/apk/release/app-release.apk"
+    "Fitly|/home/al/Projects/fitly|com.fitly.app|app/build/outputs/apk/debug/app-debug.apk|"
+    "ATracker|/home/al/Projects/atracker/atracker-android|com.sans.atracker|app/build/outputs/apk/debug/app-debug.apk|"
+)
+
+# Parse CLI arguments
+BUILD_TYPE="debug"
+TARGET_FILTER=""
+SKIP_BUILD=false
+LIST_ONLY=false
+UPGRADE_GRADLE=false
+GRADLE_VERSION=""
+
+usage() {
+    echo -e "${BOLD}Usage:${NC} update-android-apps [options] [target]"
+    echo
+    echo -e "${BOLD}Targets:${NC}"
+    echo "  launcher, finance, fitly, atracker, all (default: all)"
+    echo
+    echo -e "${BOLD}Options:${NC}"
+    echo "  -r, --release           Build release APKs where configured (SansFinance, SansLauncher)"
+    echo "  -d, --debug             Build debug APKs (default, fast incremental compilation)"
+    echo "  -s, --skip-build        Skip building, directly install existing built APKs"
+    echo "  -l, --list              List projects and their current status on connected device"
+    echo "  -g, --upgrade-gradle [v] Upgrade Gradle wrapper across all projects (e.g. 9.8.2 or auto-detect current)"
+    echo "  -h, --help              Show this help message"
+    exit 0
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -r|--release)
+            BUILD_TYPE="release"
+            shift
+            ;;
+        -d|--debug)
+            BUILD_TYPE="debug"
+            shift
+            ;;
+        -s|--skip-build)
+            SKIP_BUILD=true
+            shift
+            ;;
+        -l|--list)
+            LIST_ONLY=true
+            shift
+            ;;
+        -g|--upgrade-gradle)
+            UPGRADE_GRADLE=true
+            if [[ $# -gt 1 && ! "$2" =~ ^- ]]; then
+                GRADLE_VERSION="$2"
+                shift 2
+            else
+                shift
+            fi
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            TARGET_FILTER="$1"
+            shift
+            ;;
+    esac
+done
+
+send_notify() {
+    local title="$1"
+    local msg="$2"
+    local urgency="${3:-normal}"
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send -u "$urgency" -a "Android Updater" -i "studio" "$title" "$msg" 2>/dev/null || true
+    fi
+}
+
+echo -e "${BLUE}${BOLD}═══════════════════════════════════════════════════════════${NC}"
+echo -e "${BLUE}${BOLD}        Android Projects One-Click Updater                ${NC}"
+echo -e "${BLUE}${BOLD}═══════════════════════════════════════════════════════════${NC}"
+
+# Handle Gradle wrapper upgrade across all projects
+if [[ "$UPGRADE_GRADLE" == true ]]; then
+    if [[ -z "$GRADLE_VERSION" ]]; then
+        echo -e "${CYAN}▶ Fetching current stable Gradle release...${NC}"
+        GRADLE_VERSION=$(curl -s https://services.gradle.org/versions/current 2>/dev/null | grep -o '"version": *"[^"]*"' | head -n 1 | cut -d'"' -f4 || echo "9.8.2")
+    fi
+    echo -e "${GREEN}★ Upgrading Gradle wrapper to v${GRADLE_VERSION} across all projects...${NC}"
+    echo
+    
+    UPGRADE_FAIL=0
+    for entry in "${PROJECTS[@]}"; do
+        IFS="|" read -r name dir pkg debug_rel release_rel <<< "$entry"
+        if [[ ! -d "$dir" ]]; then
+            echo -e "  ${RED}✗ Directory not found:${NC} $dir"
+            ((UPGRADE_FAIL++)) || true
+            continue
+        fi
+        echo -e "  ${CYAN}▶ Upgrading [${BOLD}$name${NC}${CYAN}]...${NC}"
+        if (cd "$dir" && ./gradlew wrapper --gradle-version "$GRADLE_VERSION" --quiet); then
+            echo -e "    ${GREEN}✓ Wrapper upgraded to v${GRADLE_VERSION}${NC}"
+        else
+            echo -e "    ${RED}✗ Failed to upgrade wrapper for $name${NC}"
+            ((UPGRADE_FAIL++)) || true
+        fi
+    done
+    
+    # Prune old dists in ~/.gradle/wrapper/dists/
+    if [[ -d "$HOME/.gradle/wrapper/dists" ]]; then
+        echo -e "\n  ${GRAY}Cleaning old unused Gradle wrapper distributions in ~/.gradle/wrapper/dists/...${NC}"
+        for dist in "$HOME/.gradle/wrapper/dists"/*; do
+            if [[ -d "$dist" && "$(basename "$dist")" != "gradle-${GRADLE_VERSION}-bin"* ]]; then
+                echo -e "    ${GRAY}Removing old cache:${NC} $(basename "$dist")"
+                rm -rf "$dist"
+            fi
+        done
+    fi
+    
+    echo
+    if [[ $UPGRADE_FAIL -eq 0 ]]; then
+        echo -e "${GREEN}${BOLD}✓ All Android projects successfully synchronized to Gradle v${GRADLE_VERSION}!${NC}"
+        send_notify "Gradle Upgraded" "All projects upgraded to Gradle v${GRADLE_VERSION}" "normal"
+    else
+        echo -e "${YELLOW}⚠ Completed with $UPGRADE_FAIL failures.${NC}"
+        send_notify "Gradle Upgrade Incomplete" "$UPGRADE_FAIL projects failed to upgrade" "critical"
+    fi
+    
+    # If the user only requested Gradle upgrade and didn't specify build targets, exit cleanly
+    if [[ -z "$TARGET_FILTER" && "$SKIP_BUILD" == false && "$BUILD_TYPE" == "debug" ]]; then
+        echo -e "${GRAY}Pass target (e.g. 'update-android-apps launcher' or 'all') to proceed with build & ADB install.${NC}"
+        exit 0
+    fi
+    echo
+fi
+
+# Check ADB installation
+if ! command -v adb >/dev/null 2>&1; then
+    echo -e "${RED}✗ Error: 'adb' command not found in PATH.${NC}"
+    send_notify "Android Update Failed" "adb command not found." "critical"
+    exit 1
+fi
+
+# Detect ADB device
+DEVICES_OUTPUT=$(adb devices | grep -v "List of devices attached" | grep -v "^$" || true)
+CONNECTED_DEVICES=$(echo "$DEVICES_OUTPUT" | grep "device$" | awk '{print $1}' || true)
+DEVICE_COUNT=$(echo "$CONNECTED_DEVICES" | grep -c . || true)
+
+if [[ $DEVICE_COUNT -eq 0 ]]; then
+    UNAUTH=$(echo "$DEVICES_OUTPUT" | grep "unauthorized" || true)
+    if [[ -n "$UNAUTH" ]]; then
+        echo -e "${RED}✗ Error: Device connected but unauthorized. Please confirm USB debugging prompt on phone.${NC}"
+        send_notify "Android Update Failed" "Device unauthorized. Confirm USB prompt on phone." "critical"
+    else
+        echo -e "${RED}✗ Error: No connected Android device found.${NC}"
+        echo -e "${GRAY}Connect via USB with USB debugging enabled, or connect via Wi-Fi ADB:${NC}"
+        echo -e "${GRAY}  adb connect <ip>:<port>${NC}"
+        send_notify "Android Update Failed" "No Android device detected." "critical"
+    fi
+    exit 1
+fi
+
+# Select device
+if [[ -n "$ANDROID_SERIAL" ]]; then
+    TARGET_SERIAL="$ANDROID_SERIAL"
+else
+    TARGET_SERIAL=$(echo "$CONNECTED_DEVICES" | head -n 1)
+fi
+
+DEVICE_MODEL=$(adb -s "$TARGET_SERIAL" shell getprop ro.product.model 2>/dev/null | tr -d '\r' || echo "Android Device")
+DEVICE_OS=$(adb -s "$TARGET_SERIAL" shell getprop ro.build.version.release 2>/dev/null | tr -d '\r' || echo "Unknown")
+
+echo -e "${GREEN}✓ Connected Device:${NC} ${BOLD}$DEVICE_MODEL${NC} (${CYAN}$TARGET_SERIAL${NC}, Android $DEVICE_OS)"
+echo -e "${GRAY}Build variant: ${BUILD_TYPE} | Mode: $([[ "$SKIP_BUILD" == true ]] && echo "install-only" || echo "build & install")${NC}"
+echo
+
+# If list only was requested
+if [[ "$LIST_ONLY" == true ]]; then
+    echo -e "${BOLD}Project Status on Device:${NC}"
+    for entry in "${PROJECTS[@]}"; do
+        IFS="|" read -r name dir pkg debug_rel release_rel <<< "$entry"
+        installed_path=$(adb -s "$TARGET_SERIAL" shell pm path "$pkg" 2>/dev/null | tr -d '\r' || true)
+        if [[ -n "$installed_path" ]]; then
+            version_str=$(adb -s "$TARGET_SERIAL" shell dumpsys package "$pkg" 2>/dev/null | grep -E "versionName=" | head -n 1 | awk -F= '{print $2}' | tr -d '\r' || echo "unknown")
+            echo -e "  ${GREEN}●${NC} ${BOLD}$name${NC} ($pkg) - ${GREEN}Installed${NC} (v${version_str})"
+        else
+            echo -e "  ${GRAY}○${NC} ${BOLD}$name${NC} ($pkg) - ${YELLOW}Not installed${NC}"
+        fi
+    done
+    exit 0
+fi
+
+# Filter projects if a target argument was provided
+ACTIVE_PROJECTS=()
+for entry in "${PROJECTS[@]}"; do
+    IFS="|" read -r name dir pkg debug_rel release_rel <<< "$entry"
+    if [[ -n "$TARGET_FILTER" && "$TARGET_FILTER" != "all" ]]; then
+        lower_name=$(echo "$name" | tr '[:upper:]' '[:lower:]')
+        lower_filter=$(echo "$TARGET_FILTER" | tr '[:upper:]' '[:lower:]')
+        if [[ "$lower_name" != *"$lower_filter"* && "$pkg" != *"$lower_filter"* ]]; then
+            continue
+        fi
+    fi
+    ACTIVE_PROJECTS+=("$entry")
+done
+
+if [[ ${#ACTIVE_PROJECTS[@]} -eq 0 ]]; then
+    echo -e "${YELLOW}No projects matched filter '${TARGET_FILTER}'.${NC}"
+    echo "Available projects: launcher, finance, fitly, atracker"
+    exit 1
+fi
+
+declare -a RESULTS=()
+TOTAL_START=$(date +%s)
+FAILED_COUNT=0
+
+for entry in "${PROJECTS[@]}"; do
+    IFS="|" read -r name dir pkg debug_rel release_rel <<< "$entry"
+    
+    # Check if this entry is in ACTIVE_PROJECTS
+    is_active=false
+    for act in "${ACTIVE_PROJECTS[@]}"; do
+        if [[ "$act" == "$entry" ]]; then
+            is_active=true
+            break
+        fi
+    done
+    if [[ "$is_active" == false ]]; then
+        continue
+    fi
+
+    echo -e "${CYAN}▶ Processing [${BOLD}$name${NC}${CYAN}]...${NC}"
+    STEP_START=$(date +%s)
+
+    if [[ ! -d "$dir" ]]; then
+        echo -e "  ${RED}✗ Directory not found:${NC} $dir"
+        RESULTS+=("$name|DIR_MISSING|0s")
+        ((FAILED_COUNT++)) || true
+        continue
+    fi
+
+    # Determine task and APK path
+    if [[ "$BUILD_TYPE" == "release" && -n "$release_rel" ]]; then
+        TASK=":app:assembleRelease"
+        APK_PATH="$dir/$release_rel"
+    else
+        TASK=":app:assembleDebug"
+        APK_PATH="$dir/$debug_rel"
+    fi
+
+    # 1. Build step (unless skip-build)
+    if [[ "$SKIP_BUILD" == false ]]; then
+        echo -e "  ${GRAY}Building with Gradle ($TASK)...${NC}"
+        BUILD_LOG=$(mktemp)
+        set +e
+        (cd "$dir" && ./gradlew "$TASK" --quiet) > "$BUILD_LOG" 2>&1
+        GRADLE_STATUS=$?
+        set -e
+        
+        if [[ $GRADLE_STATUS -ne 0 ]]; then
+            echo -e "  ${RED}✗ Gradle build failed for $name!${NC}"
+            tail -n 15 "$BUILD_LOG" | sed 's/^/    /'
+            rm -f "$BUILD_LOG"
+            RESULTS+=("$name|BUILD_FAILED|$(($(date +%s) - STEP_START))s")
+            ((FAILED_COUNT++)) || true
+            continue
+        fi
+        rm -f "$BUILD_LOG"
+    fi
+
+    # 2. Check APK presence
+    if [[ ! -f "$APK_PATH" ]]; then
+        echo -e "  ${RED}✗ APK file not found at: $APK_PATH${NC}"
+        RESULTS+=("$name|APK_NOT_FOUND|$(($(date +%s) - STEP_START))s")
+        ((FAILED_COUNT++)) || true
+        continue
+    fi
+
+    APK_SIZE_MB=$(du -m "$APK_PATH" | cut -f1)
+    echo -e "  ${GRAY}Installing APK (${APK_SIZE_MB} MB) via ADB...${NC}"
+
+    # 3. Install on device (-r: replace, -d: allow downgrade, -t: allow test/debug APK)
+    INSTALL_LOG=$(mktemp)
+    set +e
+    adb -s "$TARGET_SERIAL" install -r -d -t "$APK_PATH" > "$INSTALL_LOG" 2>&1
+    INSTALL_STATUS=$?
+    set -e
+
+    if [[ $INSTALL_STATUS -ne 0 ]] || grep -qi "Failure" "$INSTALL_LOG"; then
+        echo -e "  ${RED}✗ Install failed:${NC}"
+        cat "$INSTALL_LOG" | sed 's/^/    /'
+        rm -f "$INSTALL_LOG"
+        RESULTS+=("$name|INSTALL_FAILED|$(($(date +%s) - STEP_START))s")
+        ((FAILED_COUNT++)) || true
+    else
+        rm -f "$INSTALL_LOG"
+        DURATION=$(($(date +%s) - STEP_START))
+        echo -e "  ${GREEN}✓ Successfully updated $name${NC} ${GRAY}(${DURATION}s)${NC}"
+        RESULTS+=("$name|SUCCESS|${DURATION}s")
+    fi
+    echo
+done
+
+TOTAL_DURATION=$(($(date +%s) - TOTAL_START))
+
+# Summary output
+echo -e "${BLUE}${BOLD}═══════════════════════════════════════════════════════════${NC}"
+echo -e "${BOLD}Summary ($DEVICE_MODEL)${NC}"
+echo -e "${BLUE}───────────────────────────────────────────────────────────${NC}"
+
+SUCCESS_COUNT=0
+for res in "${RESULTS[@]}"; do
+    IFS="|" read -r r_name r_status r_time <<< "$res"
+    if [[ "$r_status" == "SUCCESS" ]]; then
+        printf "  ${GREEN}✓${NC} ${BOLD}%-16s${NC} ${GREEN}UPDATED${NC}       ${GRAY}(%s)${NC}\n" "$r_name" "$r_time"
+        ((SUCCESS_COUNT++)) || true
+    else
+        printf "  ${RED}✗${NC} ${BOLD}%-16s${NC} ${RED}%-13s${NC} ${GRAY}(%s)${NC}\n" "$r_name" "$r_status" "$r_time"
+    fi
+done
+
+echo -e "${BLUE}───────────────────────────────────────────────────────────${NC}"
+echo -e "Total Time: ${BOLD}${TOTAL_DURATION}s${NC} | Success: ${GREEN}${SUCCESS_COUNT}/${#ACTIVE_PROJECTS[@]}${NC}"
+
+if [[ $FAILED_COUNT -eq 0 ]]; then
+    send_notify "Android Apps Updated" "Successfully updated ${SUCCESS_COUNT} apps on ${DEVICE_MODEL} (${TOTAL_DURATION}s)." "normal"
+else
+    send_notify "Android Update Incomplete" "${SUCCESS_COUNT} succeeded, ${FAILED_COUNT} failed on ${DEVICE_MODEL}." "critical"
+fi
