@@ -1,5 +1,4 @@
 com.github.tchx84.Flatseal
-com.mattjakeman.ExtensionManager
 com.obsproject.Studio
 com.rafaelmardojai.Blanket
 io.dbeaver.DBeaverCommunity
