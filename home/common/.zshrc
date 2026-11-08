@@ -172,6 +172,9 @@ postflight() {
   echo "🛫 Running Workstation Post-Flight Routine..."
   repos-status -P
   repos-status -d
+  if command -v ierp >/dev/null 2>&1; then
+    ierp export check --fix 2>/dev/null || true
+  fi
   echo "✓ Post-flight complete. (Tip: Use 'repos-wip' to snapshot dirty trees to shadow branch if switching devices)."
 }
 
