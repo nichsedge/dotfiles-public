@@ -7,8 +7,8 @@
 set -eo pipefail
 
 # Environment setup
-export ANDROID_HOME="${ANDROID_HOME:-/home/al/Android/Sdk}"
-export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-/home/al/Android/Sdk}"
+export ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
+export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$HOME/Android/Sdk}"
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
 
 # Terminal formatting
@@ -23,10 +23,10 @@ NC="\033[0m"
 
 # Project definitions: "Name|Directory|PackageId|DebugApkPath|ReleaseApkPath"
 PROJECTS=(
-    "Sans Launcher|/home/al/Projects/sanslauncher|com.sans.launcher|app/build/outputs/apk/debug/app-debug.apk|app/build/outputs/apk/release/app-release.apk"
-    "Sans Finance|/home/al/Projects/sansfinance|com.sans.finance|app/build/outputs/apk/debug/app-debug.apk|app/build/outputs/apk/release/app-release.apk"
-    "Fitly|/home/al/Projects/fitly|com.fitly.app|app/build/outputs/apk/debug/app-debug.apk|"
-    "ATracker|/home/al/Projects/atracker/atracker-android|com.sans.atracker|app/build/outputs/apk/debug/app-debug.apk|"
+    "Sans Launcher|$HOME/Projects/sanslauncher|com.sans.launcher|app/build/outputs/apk/debug/app-debug.apk|app/build/outputs/apk/release/app-release.apk"
+    "Sans Finance|$HOME/Projects/sansfinance|com.sans.finance|app/build/outputs/apk/debug/app-debug.apk|app/build/outputs/apk/release/app-release.apk"
+    "Fitly|$HOME/Projects/fitly|com.fitly.app|app/build/outputs/apk/debug/app-debug.apk|"
+    "ATracker|$HOME/Projects/atracker/atracker-android|com.sans.atracker|app/build/outputs/apk/debug/app-debug.apk|"
 )
 
 # Parse CLI arguments

@@ -111,9 +111,9 @@ if [[ "$IS_TERMUX" == true ]] && command -v pkg >/dev/null 2>&1; then
 elif command -v dnf >/dev/null 2>&1; then
   alias up="sudo dnf upgrade -y && flatpak update -y && update-antigravity update"
   alias clean="sudo dnf autoremove -y && sudo dnf clean all"
-elif command -v apt-get >/dev/null 2>&1; then
-  alias up="apt-get update && apt-get upgrade -y"
-  alias clean="apt-get autoremove -y && apt-get clean"
+elif command -v brew >/dev/null 2>&1; then
+  alias up="brew update && brew upgrade"
+  alias clean="brew cleanup -s"
 fi
 alias ports="ss -tulpn 2>/dev/null || netstat -tlpn 2>/dev/null || echo 'ports inspection requires elevated net privileges'"
 alias now="date +%T"

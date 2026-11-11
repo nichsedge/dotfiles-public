@@ -3,7 +3,9 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROFILE="fedora-kde"
-if [[ -d "/data/data/com.termux" ]] || [[ -n "${TERMUX_VERSION:-}" ]]; then
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  PROFILE="macos"
+elif [[ -d "/data/data/com.termux" ]] || [[ -n "${TERMUX_VERSION:-}" ]]; then
   PROFILE="mobile"
 fi
 INSTALL_PACKAGES=true
@@ -11,12 +13,18 @@ DRY_RUN=false
 
 usage() {
   cat <<'USAGE'
-Usage: ./bootstrap.sh [--profile fedora-kde|minimal|mobile] [--no-packages] [--dry-run]
+Usage: ./bootstrap.sh [--profile fedora-kde|macos|mobile|minimal] [--no-packages] [--dry-run]
 
 Bootstraps a new machine using this public dotfiles repo.
 
+Profiles:
+  fedora-kde  Fedora Workstation with KDE Plasma 6 (Default on Linux)
+  macos       macOS corporate/work workstation (zero-sudo / Homebrew)
+  mobile      Android 100% Native Termux standalone (headless)
+  minimal     Lightweight CLI-only environment
+
 Options:
-  --profile NAME  Install profile: fedora-kde, minimal, or mobile (Native Termux/headless). Default: fedora-kde
+  --profile NAME  Install profile: fedora-kde, macos, mobile, minimal
   --no-packages   Skip package and external tool installation
   --dry-run       Print actions without changing files
 USAGE
@@ -80,22 +88,27 @@ install_fedora_packages() {
   fi
 }
 
+install_macos_packages() {
+  log "Running zero-sudo macOS bootstrap..."
+  if [[ -f "$DOTFILES_DIR/scripts/first-install/macos.sh" ]]; then
+    local macos_flags=()
+    [[ "$DRY_RUN" == true ]] && macos_flags+=(--dry-run)
+    run bash "$DOTFILES_DIR/scripts/first-install/macos.sh" "${macos_flags[@]}"
+  fi
+}
+
 install_minimal_packages() {
   local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v dnf >/dev/null 2>&1; then
     run $sudo_cmd dnf install -y git curl zsh ripgrep fzf fd-find bat eza gh starship zoxide lazygit git-delta direnv
-  elif command -v apt-get >/dev/null 2>&1; then
-    run $sudo_cmd apt-get update
-    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf fd-find bat gh
-  elif command -v pacman >/dev/null 2>&1; then
-    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf fd bat github-cli
+  elif command -v brew >/dev/null 2>&1; then
+    run brew install git curl zsh ripgrep fzf fd bat eza gh starship zoxide lazygit git-delta direnv
   else
     log "No supported package manager found; skipping package install."
   fi
 }
 
 install_mobile_packages() {
-  local sudo_cmd; sudo_cmd="$(get_sudo)"
   if command -v pkg >/dev/null 2>&1; then
     run pkg update -y
     if [[ -f "$DOTFILES_DIR/packages/termux.txt" ]]; then
@@ -108,27 +121,8 @@ install_mobile_packages() {
     else
       run pkg install -y git curl zsh ripgrep fzf unzip ca-certificates ncurses-utils zoxide eza bat fd golang starship termux-api python cronie jq git-delta gh uv bun
     fi
-  elif command -v apt-get >/dev/null 2>&1; then
-    run $sudo_cmd apt-get update
-    run $sudo_cmd apt-get install -y git curl zsh ripgrep fzf unzip ca-certificates locales ncurses-term zoxide eza bat fd-find golang-go
-    # Debian packages bat as batcat and fd-find as fdfind; symlink to standard names
-    if command -v batcat >/dev/null 2>&1 && ! command -v bat >/dev/null 2>&1; then
-      run $sudo_cmd ln -sf "$(command -v batcat)" /usr/local/bin/bat
-    fi
-    if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
-      run $sudo_cmd ln -sf "$(command -v fdfind)" /usr/local/bin/fd
-    fi
-    if command -v locale-gen >/dev/null 2>&1; then
-      run sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen || true
-      run locale-gen || true
-      run update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 || true
-    fi
-  elif command -v dnf >/dev/null 2>&1; then
-    run $sudo_cmd dnf install -y git curl zsh ripgrep fzf unzip glibc-langpack-en ncurses-term golang
-  elif command -v pacman >/dev/null 2>&1; then
-    run $sudo_cmd pacman -Syu --noconfirm git curl zsh ripgrep fzf unzip go
   else
-    log "No supported package manager found; skipping mobile packages."
+    log "pkg not found; skipping Termux package install."
   fi
 
   # Ensure Starship prompt is present for fast, clean prompt
@@ -231,7 +225,7 @@ EOF
 }
 
 case "$PROFILE" in
-  fedora-kde|fedora-gnome|minimal|mobile) ;;
+  fedora-kde|macos|minimal|mobile) ;;
   *) log "Unsupported profile: $PROFILE"; usage; exit 1 ;;
 esac
 
@@ -239,9 +233,10 @@ log "Bootstrapping ${PROFILE} from ${DOTFILES_DIR}"
 
 if [[ "$INSTALL_PACKAGES" == true ]]; then
   case "$PROFILE" in
-    fedora-kde|fedora-gnome) install_fedora_packages ;;
-    minimal) install_minimal_packages ;;
-    mobile) install_mobile_packages ;;
+    fedora-kde) install_fedora_packages ;;
+    macos)      install_macos_packages ;;
+    minimal)    install_minimal_packages ;;
+    mobile)     install_mobile_packages ;;
   esac
 else
   log "Skipping package installation (--no-packages)"

@@ -55,7 +55,7 @@ command -v bun >/dev/null 2>&1 || run sh -c 'curl -fsSL https://bun.sh/install |
 
 if [[ "$INSTALL_AI_CLIS" == true ]]; then
   command -v npm >/dev/null 2>&1 || { echo "npm not found; skipping AI CLIs" >&2; exit 1; }
-  run npm install -g @openai/codex @google/gemini-cli @anthropic-ai/claude-code
+  run npm install -g @openai/codex @anthropic-ai/claude-code
 fi
 
 if [[ "$INSTALL_TAILSCALE" == true ]]; then

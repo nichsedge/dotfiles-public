@@ -80,13 +80,10 @@ PLATFORM_FILES=(
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
   ".local/share/applications/update-android-apps.desktop"
-  ".local/share/applications/cosmic-clipboard.desktop"
-  ".local/share/applications/dev.nichsedge.CosmicPanelClipboardButton.desktop"
   ".local/share/applications/google-chrome.desktop"
   ".local/bin/update-antigravity"
   ".local/bin/update-android-apps"
   ".local/bin/ghostty-tab"
-  ".local/bin/cosmic-clipboard"
   ".local/bin/google-chrome-stable"
   ".local/bin/tailscale-menu"
   ".local/bin/hotkey-cheatsheet"
@@ -112,13 +109,6 @@ if [[ "$PLATFORM" == "linux" && "$HEADLESS" != true ]]; then
   for f in "${PLATFORM_FILES[@]}"; do
     FILES+=("$f")
   done
-  # Dynamically include COSMIC desktop config files from home/linux/.config/cosmic
-  if [[ -d "${DOTFILES_DIR}/home/linux/.config/cosmic" ]]; then
-    while IFS= read -r file; do
-      rel="${file#${DOTFILES_DIR}/home/linux/}"
-      FILES+=("$rel")
-    done < <(find "${DOTFILES_DIR}/home/linux/.config/cosmic" -type f 2>/dev/null || true)
-  fi
 fi
 
 ensure_private_file() {
@@ -144,9 +134,9 @@ mkdir_backup_if_needed=false
 
 for f in "${FILES[@]}"; do
   # Resolve each file against common/ first, then the platform directory.
-  if [[ -f "${DOTFILES_DIR}/home/common/${f}" ]]; then
+  if [[ -e "${DOTFILES_DIR}/home/common/${f}" || -L "${DOTFILES_DIR}/home/common/${f}" ]]; then
     src="${DOTFILES_DIR}/home/common/${f}"
-  elif [[ -f "${DOTFILES_DIR}/home/${PLATFORM}/${f}" ]]; then
+  elif [[ -e "${DOTFILES_DIR}/home/${PLATFORM}/${f}" || -L "${DOTFILES_DIR}/home/${PLATFORM}/${f}" ]]; then
     src="${DOTFILES_DIR}/home/${PLATFORM}/${f}"
   else
     src=""

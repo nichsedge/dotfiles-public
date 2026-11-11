@@ -18,12 +18,9 @@ FILES=(
   ".local/share/applications/antigravity.desktop"
   ".local/share/applications/antigravity-ide.desktop"
   ".local/share/applications/update-android-apps.desktop"
-  ".local/share/applications/cosmic-clipboard.desktop"
-  ".local/share/applications/dev.nichsedge.CosmicPanelClipboardButton.desktop"
   ".local/share/applications/google-chrome.desktop"
   ".local/bin/update-antigravity"
   ".local/bin/update-android-apps"
-  ".local/bin/cosmic-clipboard"
   ".local/bin/google-chrome-stable"
   ".config/systemd/user/cliphist.service"
   ".config/kcminputrc"
@@ -66,14 +63,6 @@ case "$(uname -s)" in
   Linux)  PLATFORM="linux" ;;
   *) echo "Unsupported platform: $(uname -s)"; exit 1 ;;
 esac
-
-# Include COSMIC desktop configs on Linux if present (excluding personal wallpaper & file paths)
-if [[ "$PLATFORM" == "linux" && -d "${HOME_DIR}/.config/cosmic" ]]; then
-  while IFS= read -r file; do
-    rel="${file#${HOME_DIR}/}"
-    FILES+=("$rel")
-  done < <(find "${HOME_DIR}/.config/cosmic" -type f ! -path "*/com.system76.CosmicBackground/*" ! -path "*/com.system76.CosmicSettings.Wallpaper/*" ! -path "*/com.system76.CosmicFiles/*" 2>/dev/null || true)
-fi
 
 for f in "${FILES[@]}"; do
   src="${HOME_DIR}/${f}"
