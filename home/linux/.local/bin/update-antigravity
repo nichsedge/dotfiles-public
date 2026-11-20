@@ -32,6 +32,13 @@ fetch_releases_python() {
     python3 - "$@" << 'EOF'
 import urllib.request, gzip, json, html, re, sys
 
+def semver_tuple(ver_str):
+    try:
+        clean = re.sub(r'[^0-9\.]', '', str(ver_str))
+        return tuple(int(x) for x in clean.split('.') if x)
+    except Exception:
+        return (0,)
+
 def fetch_releases():
     html_content = ""
     try:
@@ -52,7 +59,8 @@ def fetch_releases():
     ide_list = []
 
     # 1. Scrape from releases page HTML data attributes
-    m_hub = re.search(r'data-static-versions=[\"\']([^\"\']+)[\"\']', html_content)
+    # Note: data-fallback-antigravity contains Hub/App releases; data-fallback-ide contains IDE releases
+    m_hub = re.search(r'data-fallback-antigravity=[\"\']([^\"\']+)[\"\']', html_content)
     if m_hub:
         try:
             hub_list = json.loads(html.unescape(m_hub.group(1)))
@@ -97,8 +105,8 @@ def fetch_releases():
         except Exception:
             return False
 
-    hub_v2 = [x for x in hub_list if is_v2_plus(x)]
-    ide_v2 = [x for x in ide_list if is_v2_plus(x)]
+    hub_v2 = sorted([x for x in hub_list if is_v2_plus(x)], key=lambda x: semver_tuple(x.get("version")), reverse=True)
+    ide_v2 = sorted([x for x in ide_list if is_v2_plus(x)], key=lambda x: semver_tuple(x.get("version")), reverse=True)
 
     action = sys.argv[1] if len(sys.argv) > 1 else "latest"
     target = sys.argv[2] if len(sys.argv) > 2 else "all"
@@ -388,6 +396,23 @@ update_components() {
     local meta
     meta="$(fetch_releases_python latest all)"
 
+    needs_update() {
+        local cur="$1" latest="$2"
+        if [[ -z "$latest" || "$latest" == "?" ]]; then
+            return 1
+        fi
+        if [[ "$cur" == "not_installed" ]]; then
+            return 0
+        fi
+        if [[ "$cur" == "$latest" ]]; then
+            return 1
+        fi
+        if [[ "$(printf '%s\n%s\n' "$cur" "$latest" | sort -V | head -n1)" != "$latest" ]]; then
+            return 0
+        fi
+        return 1
+    }
+
     if [[ "$target" == "ide" || "$target" == "all" ]]; then
         local ide_latest ide_cur
         ide_latest="$(python3 -c 'import json, sys; d=json.loads(sys.argv[1]); print(d.get("ide",{}).get("version",""))' "$meta")"
@@ -395,7 +420,7 @@ update_components() {
         echo ""
         if [[ -z "$ide_latest" ]]; then
             warn "Could not fetch latest IDE version."
-        elif [[ "$ide_cur" == "$ide_latest" ]]; then
+        elif ! needs_update "$ide_cur" "$ide_latest"; then
             log "Antigravity IDE is already up to date ($ide_cur)."
         else
             info "Updating Antigravity IDE: $ide_cur -> $ide_latest"
@@ -410,7 +435,7 @@ update_components() {
         echo ""
         if [[ -z "$hub_latest" ]]; then
             warn "Could not fetch latest Hub version."
-        elif [[ "$hub_cur" == "$hub_latest" ]]; then
+        elif ! needs_update "$hub_cur" "$hub_latest"; then
             log "Antigravity Hub is already up to date ($hub_cur)."
         else
             info "Updating Antigravity Hub: $hub_cur -> $hub_latest"
